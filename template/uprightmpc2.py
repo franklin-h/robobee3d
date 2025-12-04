@@ -7,9 +7,17 @@ from template_controllers import createMPC, reactiveController
 import flight_tasks
 from time import perf_counter
 import sys
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+mpl.use('macosx')
+mpl.use('TkAgg')
+from mpl_toolkits.mplot3d import Axes3D
+
 import progressbar
 from plot_helpers import *
+import time
 
 def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
     def posParamPlot(_ax):
@@ -126,7 +134,7 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
         elif speedTest:
             pdes, dpdes, sdes = flight_tasks.straightAcc(tt[ti], initialPos, vdes=speedTestvdes, tduration=speedTestdur)
         else:
-            pdes, dpdes, sdes = flight_tasks.helix(tt[ti], initialPos, trajAmp=trajAmp, trajFreq=trajFreq, dz=0.1, useY=False)
+            pdes, dpdes, sdes = flight_tasks.helix(tt[ti], initialPos, trajAmp=trajAmp, trajFreq=trajFreq, dz=0.1, useY=True) # if useY is false, then it just moves back and forth while going up
             # Add perturbation for this traj
             if tpert is not None and tt[ti] > tpert:
                 dq[1] += 2
@@ -136,7 +144,8 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
         if hlInterval is None or tt[ti] - thlPrev > hlInterval:
             if useMPC:
                 t1 = perf_counter()
-                uquad, log['accdes'][ti,:] = mdl.update(p, Rb, dq, pdes, dpdes, sdes)
+                actualT0 = -1.0  # seems like there's an error with not enough arguments below??
+                uquad, log['accdes'][ti,:] = mdl.update(p, Rb, dq, pdes, dpdes, sdes,actualT0)
                 avgTime += 0.01 * (perf_counter() - t1 - avgTime)
                 # # Alternate simulation by integrating accDes
                 # ddqdes = accdess[ti,:]
@@ -380,10 +389,24 @@ if __name__ == "__main__":
     up, upc = createMPC()
 
     # Hover
-    controlTest(upc, 500, useMPC=True, hlInterval=5)
+    start = time.time()
+    # controlTest(upc, 500, useMPC=True, hlInterval=5)
+    controlTest(
+        upc,
+        tend=10000,  # longer sim so you see the helix
+        useMPC=True,
+        trajAmp=100,  # radius of helix in mm
+        trajFreq=1,  # 1 Hz lateral motion
+        hlInterval=5
+    )
+
+    end = time.time()
+    print(end - start)
+
     # # Ascent
     # controlTest(up, 500, useMPC=True, ascentIC=True)
     # # Traj
     # controlTest(upc, 2000, useMPC=True, trajAmp=50, trajFreq=1, hlInterval=5)
+
 
     # papPlots(up)

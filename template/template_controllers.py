@@ -186,9 +186,30 @@ class UprightMPC2():
         self.g = g
         self.Tmax = TtoWmax * g # use thrust-to-weight ratio to set max specific thrust
 
+        # Create OSQP old version only works with old version of osqp
+        # self.model = osqp.OSQP()
+        # self.model.setup(P=self.P, A=self.A, l=np.zeros(nc), eps_rel=1e-4, eps_abs=1e-4, verbose=False)
+
         # Create OSQP
         self.model = osqp.OSQP()
-        self.model.setup(P=self.P, A=self.A, l=np.zeros(nc), eps_rel=1e-4, eps_abs=1e-4, verbose=False)
+
+        nx = self.N * (2 * ny + nu)
+        nc = 2 * self.N * ny + self.N
+
+        q0 = np.zeros(nx)
+        l0 = np.zeros(nc)
+        u0 = np.zeros(nc)  # or np.inf / something loose – they get overwritten later anyway
+
+        self.model.setup(
+            P=self.P,
+            q=q0,
+            A=self.A,
+            l=l0,
+            u=u0,
+            eps_rel=1e-4,
+            eps_abs=1e-4,
+            verbose=False,
+        )
 
         # Manage linearization point
         self.T0 = 0 # mass-specific thrust
