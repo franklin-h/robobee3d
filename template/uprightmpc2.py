@@ -85,7 +85,7 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False
     # wlqpuPlots(ax[8])
     # fig.tight_layout()
     
-    fig = plt.figure()
+    fig = plt.figure(dpi=250)
     ax3d = fig.add_subplot(1,1,1,projection='3d')
     posParamPlot(ax3d)
 
@@ -391,40 +391,23 @@ if __name__ == "__main__":
     # Hover
     start = time.time()
     # controlTest(upc, 500, useMPC=True, hlInterval=5)
-    controlTest(
+
+    # Some interesting things you might want to plot
+    # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
+
+    ## helix task
+
+    log = controlTest(
         up,
-        tend=10000,  # longer sim so you see the helix
+        tend=500,  # longer sim so you see the helix
         useMPC=True,
         trajAmp=100,  # radius of helix in mm
         trajFreq=1,  # 1 Hz lateral motion
-        hlInterval=5
+        hlInterval=5,
+        tpert = 250 #
     )
+    viewControlTestLog(log,vscale=75,desTraj=True)
 
-    end = time.time()
-    print(end - start)
-
-    # # Ascent
-    # controlTest(up, 500, useMPC=True, ascentIC=True)
-    # # Traj
-    # controlTest(upc, 2000, useMPC=True, trajAmp=50, trajFreq=1, hlInterval=5)
-
-
-    # papPlots(up)
-if __name__ == "__main__":
-    up, upc = createMPC()
-
-    # Hover
-    start = time.time()
-
-    ## helix task
-    # log = controlTest(
-    #     up,
-    #     tend=10000,  # longer sim so you see the helix
-    #     useMPC=True,
-    #     trajAmp=100,  # radius of helix in mm
-    #     trajFreq=1,  # 1 Hz lateral motion
-    #     hlInterval=5
-    # )
 
     # flip task
     # log = controlTest(
@@ -457,3 +440,30 @@ if __name__ == "__main__":
         plt.grid(True)
         plt.tight_layout()
         plt.show()
+
+
+# if __name__ == "__main__":
+#     up, upc = createMPC()
+#
+#     # Hover
+#     start = time.time()
+#     # controlTest(upc, 500, useMPC=True, hlInterval=5)
+#     controlTest(
+#         up,
+#         tend=10000,  # longer sim so you see the helix
+#         useMPC=True,
+#         trajAmp=100,  # radius of helix in mm
+#         trajFreq=1,  # 1 Hz lateral motion
+#         hlInterval=5
+#     )
+#
+#     end = time.time()
+#     print(end - start)
+#
+#     # # Ascent
+#     # controlTest(up, 500, useMPC=True, ascentIC=True)
+#     # # Traj
+#     # controlTest(upc, 2000, useMPC=True, trajAmp=50, trajFreq=1, hlInterval=5)
+#
+#
+#     # papPlots(up)
