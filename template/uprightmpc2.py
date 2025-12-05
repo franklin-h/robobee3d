@@ -1,3 +1,4 @@
+from pickle import FALSE
 
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -396,27 +397,29 @@ if __name__ == "__main__":
     # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
 
     ## helix task
-
-    log = controlTest(
-        up,
-        tend=500,  # longer sim so you see the helix
-        useMPC=True,
-        trajAmp=100,  # radius of helix in mm
-        trajFreq=1,  # 1 Hz lateral motion
-        hlInterval=5,
-        tpert = 250 #
-    )
-    viewControlTestLog(log,vscale=75,desTraj=True)
+    # log = controlTest(
+    #     up,
+    #     tend=4000,  # longer sim so you see the helix
+    #     useMPC=True,
+    #     trajAmp=100,  # radius of helix in mm
+    #     trajFreq=1,  # 1 Hz lateral motion
+    #     hlInterval=5,
+    #     tpert = 2000, #
+    #     showPlots = False
+    # )
+    # viewControlTestLog(log,vscale=75,desTraj=True)
 
 
     # flip task
-    # log = controlTest(
-    #     up,
-    #     tend=1000,
-    #     useMPC=True,
-    #     flipTask=True,
-    #     showPlots=True,   # or False if you’ll use viewControlTestLog yourself
-    # )
+    log = controlTest(
+        up,
+        tend=1000,
+        useMPC=True,
+        flipTask=True,
+        showPlots=False   # or False if you’ll use viewControlTestLog yourself
+    )
+    viewControlTestLog(log,vscale=25,desTraj=True)
+
     end = time.time()
     print("Total sim time (s):", end - start)
 
@@ -429,17 +432,18 @@ if __name__ == "__main__":
         plt.title("OSQP solve time per MPC call")
         plt.grid(True)
         plt.tight_layout()
+        plt.ylim(0,0.1)
         plt.show()
 
         # Optional: also plot iteration counts
-        plt.figure()
-        plt.plot(up.solve_iters, marker='o', linestyle='-')
-        plt.xlabel("MPC solve index")
-        plt.ylabel("OSQP iterations")
-        plt.title("OSQP iterations per MPC call")
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
+        # plt.figure()
+        # plt.plot(up.solve_iters, marker='o', linestyle='-')
+        # plt.xlabel("MPC solve index")
+        # plt.ylabel("OSQP iterations")
+        # plt.title("OSQP iterations per MPC call")
+        # plt.grid(True)
+        # plt.tight_layout()
+        # plt.show()
 
 
 # if __name__ == "__main__":

@@ -322,7 +322,19 @@ class UprightMPC2():
         return u, self.getAccDes(R0, dq0)
         
 def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3, wthrust=1e-1, wmom=1e-2, TtoWmax=2, popts=np.zeros(90), **kwargs):
-    """Returns the mdl"""
+    """Returns the mdl. Parameters are
+    N: prediction horizon length
+    wpr: running position weight. First three components of Qyr
+    wpf: final position weight. First three components of Qyf.
+    ws : running orientation-vector weight. Last three components of Qyr.
+    wds: running orientation-rate weight. Last three components of Qdyr (Q_dot_yr).
+    wvr: running velocity weight. First three components of Qdyr.
+    wvf: final velocity weight. First three components of Qdyf.
+
+    Remember "we frequently use a higher final cost than running cost," see paper.
+    """
+
+
     dt = 5
     g = 9.81e-3
     # WLQP inputs
