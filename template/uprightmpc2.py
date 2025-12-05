@@ -11,8 +11,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-mpl.use('macosx')
-mpl.use('TkAgg')
+# mpl.use('macosx')
+# mpl.use('TkAgg')
 from mpl_toolkits.mplot3d import Axes3D
 
 import progressbar
@@ -410,3 +410,50 @@ if __name__ == "__main__":
 
 
     # papPlots(up)
+if __name__ == "__main__":
+    up, upc = createMPC()
+
+    # Hover
+    start = time.time()
+
+    ## helix task
+    # log = controlTest(
+    #     up,
+    #     tend=10000,  # longer sim so you see the helix
+    #     useMPC=True,
+    #     trajAmp=100,  # radius of helix in mm
+    #     trajFreq=1,  # 1 Hz lateral motion
+    #     hlInterval=5
+    # )
+
+    # flip task
+    # log = controlTest(
+    #     up,
+    #     tend=1000,
+    #     useMPC=True,
+    #     flipTask=True,
+    #     showPlots=True,   # or False if you’ll use viewControlTestLog yourself
+    # )
+    end = time.time()
+    print("Total sim time (s):", end - start)
+
+    # ---- Plot OSQP timing per MPC call ----
+    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+        plt.figure()
+        plt.plot(up.solve_times, marker='o', linestyle='-')
+        plt.xlabel("MPC solve index")
+        plt.ylabel("OSQP solve time [ms]")
+        plt.title("OSQP solve time per MPC call")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
+        # Optional: also plot iteration counts
+        plt.figure()
+        plt.plot(up.solve_iters, marker='o', linestyle='-')
+        plt.xlabel("MPC solve index")
+        plt.ylabel("OSQP iterations")
+        plt.title("OSQP iterations per MPC call")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()

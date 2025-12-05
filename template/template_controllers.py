@@ -232,31 +232,61 @@ class UprightMPC2():
         xtest = openLoopX(self.N, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g)
         print((self.A @ xtest - l)[:2*self.N*ny])
     
+    # def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
+    #     # Update
+    #     self.A, self.l, self.u, self.Axidx = updateConstraint(self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax)
+    #     self.Pdata, self.q = updateObjective(self.N, *self.Wts, ydes, dydes)
+    #
+    #     # OSQP solve ---
+    #     self.model.update(Px=self.Pdata, Ax=self.A.data, q=self.q, l=self.l, u=self.u)
+    #     # res = self.model.solve()
+    #     # print(res)
+    #     start = time.time()
+    #     res = self.model.solve()
+    #     end = time.time()
+    #     elapsed = end - start
+    #     print(f"OSQP solve time: {elapsed * 1e3:.3f} ms")
+    #
+    #     # print(f"OSQP iter per step: {res.info.iter}, status: {res.info.status}")
+    #
+    #     if 'solved' not in res.info.status:
+    #         print(res.info.status)
+    #     self.obj_val = res.info.obj_val
+    #     # Functions for debugging
+    #     self.obj = lambda x : 0.5 * x.T @ self.Pdense @ x + self.q.T @ x
+    #     self.viol = lambda x : np.amin(np.hstack((self.A @ x - self.l, self.u - self.A @ x)))
+    #     return res.x
+
     def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
         # Update
-        self.A, self.l, self.u, self.Axidx = updateConstraint(self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax)
+        self.A, self.l, self.u, self.Axidx = updateConstraint(
+            self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax
+        )
         self.Pdata, self.q = updateObjective(self.N, *self.Wts, ydes, dydes)
-        
+
         # OSQP solve ---
         self.model.update(Px=self.Pdata, Ax=self.A.data, q=self.q, l=self.l, u=self.u)
-        # res = self.model.solve()
-        # print(res)
-        start = time.time()
-        res = self.model.solve()
-        end = time.time()
-        elapsed = end - start
-        print(f"OSQP solve time: {elapsed * 1e3:.3f} ms")
 
-        # print(f"OSQP iter per step: {res.info.iter}, status: {res.info.status}")
+        # High-resolution timing for the solve
+        t0 = time.perf_counter()
+        res = self.model.solve()
+        t1 = time.perf_counter()
+
+        elapsed_ms = (t1 - t0) * 1e3
+        self.solve_times.append(elapsed_ms)
+        self.solve_iters.append(res.info.iter)
+
+        # Optional: print if you want live feedback
+        # print(f"OSQP solve time: {elapsed_ms:.3f} ms, iters: {res.info.iter}")
 
         if 'solved' not in res.info.status:
             print(res.info.status)
         self.obj_val = res.info.obj_val
         # Functions for debugging
-        self.obj = lambda x : 0.5 * x.T @ self.Pdense @ x + self.q.T @ x
-        self.viol = lambda x : np.amin(np.hstack((self.A @ x - self.l, self.u - self.A @ x)))
+        self.obj = lambda x: 0.5 * x.T @ self.Pdense @ x + self.q.T @ x
+        self.viol = lambda x: np.amin(np.hstack((self.A @ x - self.l, self.u - self.A @ x)))
         return res.x
-    
+
     def update2(self, p0, R0, dq0, pdes, dpdes, sdes):
         # At current state
         s0 = np.copy(R0[:,2])
