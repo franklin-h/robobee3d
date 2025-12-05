@@ -190,7 +190,7 @@ def papPlots(bmpc):
         viewControlTestLog(l1, desTraj=True, vscale=10)
         fig, ax = plt.subplots(1,3, figsize=(7.5,2.5))
         for i in range(0,3,2):
-            ax[i].plot(1e-3*l1['t'], l1['y'][:,i], 'b')
+            ax[i].plot(1e-3*l1[ 't'], l1['y'][:,i], 'b')
             ax[i].plot(1e-3*l1['t'], l1['pdes'][:,i], 'k--', alpha=0.3)
             ax[i].set_xlabel('t [s]')
             
@@ -392,7 +392,7 @@ if __name__ == "__main__":
     start = time.time()
     # controlTest(upc, 500, useMPC=True, hlInterval=5)
     controlTest(
-        upc,
+        up,
         tend=10000,  # longer sim so you see the helix
         useMPC=True,
         trajAmp=100,  # radius of helix in mm

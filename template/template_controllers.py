@@ -3,7 +3,7 @@ import numpy as np
 import scipy.sparse as sp
 from genqp import skew, Ib
 from uprightmpc2py import UprightMPC2C # C version
-
+import time
 """This file creates the python controller, and can return py ver, C ver, and a reactive"""
 
 ny = 6
@@ -214,6 +214,10 @@ class UprightMPC2():
         # Manage linearization point
         self.T0 = 0 # mass-specific thrust
         self.Ibi = np.diag(1/Ib)
+
+        # Logging for OSQP performance
+        self.solve_times = []  # in milliseconds
+        self.solve_iters = []  # iteration count per solve
         
     def codegen(self, dirname='uprightmpc2/gen'):
         try:
@@ -235,7 +239,16 @@ class UprightMPC2():
         
         # OSQP solve ---
         self.model.update(Px=self.Pdata, Ax=self.A.data, q=self.q, l=self.l, u=self.u)
+        # res = self.model.solve()
+        # print(res)
+        start = time.time()
         res = self.model.solve()
+        end = time.time()
+        elapsed = end - start
+        print(f"OSQP solve time: {elapsed * 1e3:.3f} ms")
+
+        # print(f"OSQP iter per step: {res.info.iter}, status: {res.info.status}")
+
         if 'solved' not in res.info.status:
             print(res.info.status)
         self.obj_val = res.info.obj_val
