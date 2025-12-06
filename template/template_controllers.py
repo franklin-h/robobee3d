@@ -201,9 +201,9 @@ class UprightMPC2():
         u0 = np.zeros(nc)  # or np.inf / something loose – they get overwritten later anyway
 
         self.model.setup(
-            P=self.P,
-            q=q0,
-            A=self.A,
+            P=self.P.astype(np.float32),
+            q=q0.astype(np.float32),
+            A=self.A.astype(np.float32),
             l=l0,
             u=u0,
             eps_rel=1e-4,

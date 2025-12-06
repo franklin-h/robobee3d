@@ -8,18 +8,20 @@ import flight_tasks
 from time import perf_counter
 import sys
 import matplotlib as mpl
-import matplotlib.pyplot as plt
+
 from mpl_toolkits.mplot3d import Axes3D
 
 mpl.use('macosx')
-mpl.use('TkAgg')
+mpl.use("QtAgg")
+import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
 
 import progressbar
 from plot_helpers import *
 import time
 
-def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
+def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=0.4):
     def posParamPlot(_ax):
         traj3plot(_ax, log['t'], log['y'][:,:3], log['y'][:,3:6], "Blues_r", vscale=vscale)
         aspectEqual3(_ax, log['y'][:,:3])
@@ -74,7 +76,7 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False
         _ax.plot(log['t'], log['wlqpu'][:,2:],'--')
         _ax.legend(('0','1','2','3'))
         _ax.set_ylabel('wlqpu')
-    
+
     # fig = plt.figure()
     # ax = [fig.add_subplot(3,3,i+1) for i in range(1,12)]
     # posPlot(ax[0])
@@ -84,7 +86,7 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False
     # accdesPlots(ax[6], ax[7])
     # wlqpuPlots(ax[8])
     # fig.tight_layout()
-    
+
     fig = plt.figure()
     ax3d = fig.add_subplot(1,1,1,projection='3d')
     posParamPlot(ax3d)
@@ -113,7 +115,7 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
     dpdes = np.zeros(3)
     sdes = np.array([0,0,1])
     initialPos = np.copy(p)
-    
+
     tt = np.arange(tend, step=dtsim)
     Nt = len(tt)
 
@@ -170,7 +172,7 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
 def logMetric(log):
     # A metric to plot about how good the tracking was
     Nt = len(log['t'])
-    perr = log['y'][:,:3]
+    perr = log['y'][:,:3] - log['pdes']
     tau = log['u'][:,1:3]
     serr = log['y'][:,3:6]
     serr[:,2] -= 1.0
@@ -179,7 +181,7 @@ def logMetric(log):
     for i in range(Nt):
         err += np.dot(perr[i,:], perr[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
         eff += np.dot(tau[i,:], tau[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
-    err /= Nt
+    err = np.sqrt(err/(3*Nt))
     eff /= Nt
     return err, eff
 
@@ -193,7 +195,7 @@ def papPlots(bmpc):
             ax[i].plot(1e-3*l1['t'], l1['y'][:,i], 'b')
             ax[i].plot(1e-3*l1['t'], l1['pdes'][:,i], 'k--', alpha=0.3)
             ax[i].set_xlabel('t [s]')
-            
+
         ax[1].plot(1e-3*l1['t'], 180/np.pi*np.arctan2(l1['y'][:,3], l1['y'][:,5]), 'b')
         ax[1].plot([0, 0.1, 0.2], [0, 0, -180], 'k--', alpha=0.3)
         ax[1].plot([0.2, 0.3, 1], [180, 0, 0], 'k--', alpha=0.3)
@@ -211,7 +213,7 @@ def papPlots(bmpc):
             ax[i].plot(1e-3*l1['t'], l1['y'][:,i], 'b')
             ax[i].plot(1e-3*l1['t'], l1['pdes'][:,i], 'k--', alpha=0.3)
             ax[i].set_xlabel('t [s]')
-            
+
         ax[1].plot(1e-3*l1['t'], 180/np.pi*np.arctan2(l1['y'][:,3], l1['y'][:,5]), 'b')
         ax[1].plot([0, 0.45, 0.55], [0, 0, -90], 'k--', alpha=0.3)
         ax[1].set_ylabel('Angle [deg]')
@@ -314,13 +316,13 @@ def papPlots(bmpc):
     def gainTuningPlots(maxcost=10):
         lmpc = controlTest(bmpc, 1000, useMPC=True, showPlots=False)
         empc, effmpc = logMetric(lmpc)
-                        
+
         def plot1(ax, dat, cbar=False):
             costs = np.clip(dat['costs'] / empc, 0, maxcost)
             im = ax.pcolormesh(dat['xv'], dat['yv'], costs, cmap='gray_r', shading='auto', vmin=0, vmax=maxcost)
             if cbar:
                 fig.colorbar(im)
-        
+
         fig, ax = plt.subplots(1,3,figsize=(12,4))
         plot1(ax[0], np.load('ks.npz'))
         ax[0].plot([15], [100], 'r*', ms=20)
@@ -370,7 +372,7 @@ def papPlots(bmpc):
     # gainTuningSims(False, 'kpos', [1e-3,8e-2], [1e-1,2e0], 'ks', [15,100])
     # # defaults wpr=1, wvr=1e3, wpf=5, wvf=2e3
     # gainTuningSims(True, 'wpos', [0.5,10], [0.5e3, 10e3], None, None)
-    
+
     # hoverTask(False, {'ks':[15,100], 'kpos':[0.01,1]}, {'ks':[15,100], 'kpos':[0.04,1.25]})
     # sTask({'ks':[15,100], 'kpos':[0.01,1]})
 
@@ -388,20 +390,25 @@ def papPlots(bmpc):
 if __name__ == "__main__":
     up, upc = createMPC()
 
-    # Hover
+    # Helix
     start = time.time()
     # controlTest(upc, 500, useMPC=True, hlInterval=5)
-    controlTest(
-        upc,
+    log = controlTest(
+        up,
         tend=10000,  # longer sim so you see the helix
         useMPC=True,
         trajAmp=100,  # radius of helix in mm
         trajFreq=1,  # 1 Hz lateral motion
-        hlInterval=5
+        #hlInterval=5
     )
 
     end = time.time()
-    print(end - start)
+    print("Time (ms) total:", end - start)
+    err, eff = logMetric(log)
+    print("RMS position error [mm]:", err)
+
+
+
 
     # # Ascent
     # controlTest(up, 500, useMPC=True, ascentIC=True)
