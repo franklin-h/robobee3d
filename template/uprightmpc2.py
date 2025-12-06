@@ -389,62 +389,22 @@ def papPlots(bmpc):
 if __name__ == "__main__":
     up, upc = createMPC()
 
-    # Hover
+    # Helix
     start = time.time()
     # controlTest(upc, 500, useMPC=True, hlInterval=5)
-
-    # Some interesting things you might want to plot
-    # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
-
-    ## helix task
-    # log = controlTest(
-    #     up,
-    #     tend=4000,  # longer sim so you see the helix
-    #     useMPC=True,
-    #     trajAmp=100,  # radius of helix in mm
-    #     trajFreq=1,  # 1 Hz lateral motion
-    #     hlInterval=5,
-    #     tpert = 2000, #
-    #     showPlots = False
-    # )
-    # viewControlTestLog(log,vscale=75,desTraj=True)
-
-
-    # flip task
     log = controlTest(
         up,
-        tend=1000,
+        tend=10000,  # longer sim so you see the helix
         useMPC=True,
-        flipTask=True,
-        showPlots=False   # or False if you’ll use viewControlTestLog yourself
+        trajAmp=100,  # radius of helix in mm
+        trajFreq=1,  # 1 Hz lateral motion
+        #hlInterval=5
     )
-    viewControlTestLog(log,vscale=25,desTraj=True)
 
     end = time.time()
-    print("Total sim time (s):", end - start)
-
-    # ---- Plot OSQP timing per MPC call ----
-    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
-        plt.figure()
-        plt.plot(up.solve_times, marker='o', linestyle='-')
-        plt.xlabel("MPC solve index")
-        plt.ylabel("OSQP solve time [ms]")
-        plt.title("OSQP solve time per MPC call")
-        plt.grid(True)
-        plt.tight_layout()
-        plt.ylim(0,0.1)
-        plt.show()
-
-        # Optional: also plot iteration counts
-        # plt.figure()
-        # plt.plot(up.solve_iters, marker='o', linestyle='-')
-        # plt.xlabel("MPC solve index")
-        # plt.ylabel("OSQP iterations")
-        # plt.title("OSQP iterations per MPC call")
-        # plt.grid(True)
-        # plt.tight_layout()
-        # plt.show()
-
+    print("Time (ms) total:", end - start)
+    err, eff = logMetric(log)
+    print("RMS position error [mm]:", err)
 
 # if __name__ == "__main__":
 #     up, upc = createMPC()
@@ -460,7 +420,17 @@ if __name__ == "__main__":
 #         trajFreq=1,  # 1 Hz lateral motion
 #         hlInterval=5
 #     )
-#
+## ---- Plot OSQP timing per MPC call ----
+    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+        plt.figure()
+        plt.plot(up.solve_times, marker='o', linestyle='-')
+        plt.xlabel("MPC solve index")
+        plt.ylabel("OSQP solve time [ms]")
+        plt.title("OSQP solve time per MPC call")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.ylim(0, 0.1)
+        plt.show()
 #     end = time.time()
 #     print(end - start)
 #
