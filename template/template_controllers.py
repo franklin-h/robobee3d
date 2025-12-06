@@ -4,7 +4,8 @@ import scipy.sparse as sp
 from genqp import skew, Ib
 from uprightmpc2py import UprightMPC2C # C version
 import time
-"""This file creates the python controller, and can return py ver, C ver, and a reactive"""
+"""This file creates the python controller, 
+and can return py ver, C ver, and a reactive"""
 
 ny = 6
 nu = 3
