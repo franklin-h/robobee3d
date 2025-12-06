@@ -405,7 +405,6 @@ if __name__ == "__main__":
     print("Time (ms) total:", end - start)
     err, eff = logMetric(log)
     print("RMS position error [mm]:", err)
-
 # if __name__ == "__main__":
 #     up, upc = createMPC()
 #
