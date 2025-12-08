@@ -6,6 +6,7 @@ np.set_printoptions(precision=4, suppress=True, linewidth=200)
 from genqp import quadrotorNLDyn
 from template_controllers import createMPC, reactiveController
 import flight_tasks
+import pandas as pd
 from time import perf_counter
 import sys
 import matplotlib as mpl
@@ -13,85 +14,124 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 # mpl.use('macosx')
-# mpl.use('TkAgg')
+mpl.use('QtAgg')
 from mpl_toolkits.mplot3d import Axes3D
 
 import progressbar
 from plot_helpers import *
 import time
 
-def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
+
+def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=0.4, excel_file=None):
     def posParamPlot(_ax):
-        traj3plot(_ax, log['t'], log['y'][:,:3], log['y'][:,3:6], "Blues_r", vscale=vscale)
-        aspectEqual3(_ax, log['y'][:,:3])
+        traj3plot(_ax, log['t'], log['y'][:, :3], log['y'][:, 3:6], "Blues_r", vscale=vscale)
+        aspectEqual3(_ax, log['y'][:, :3])
+
         if log2 is not None:
-            traj3plot(_ax, log2['t'], log2['y'][:,:3], log2['y'][:,3:6], "Reds_r", vscale=vscale)
-        # _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
+            traj3plot(_ax, log2['t'], log2['y'][:, :3], log2['y'][:, 3:6], "Reds_r", vscale=vscale)
+
         if goal0:
             _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
             _ax.legend(('MPC', 'Reactive', 'Goal'))
         else:
             _ax.legend(('MPC', 'Reactive'))
+
         if desTraj:
-            _ax.plot(log['pdes'][:,0], log['pdes'][:,1], log['pdes'][:,2], 'k--', alpha=0.5, zorder=9)
+            _ax.plot(log['pdes'][:, 0], log['pdes'][:, 1], log['pdes'][:, 2], 'k--', alpha=0.5, zorder=9)
+
+        # --- Add Excel points ---
+        if excel_file is not None:
+            df = pd.read_excel(excel_file)
+            if 'x' in df.columns and 'y' in df.columns and 'z' in df.columns:
+                points = df[['x', 'y', 'z']].to_numpy()
+            else:
+                points = df.to_numpy()
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c='#ff69b4', s=0.1, alpha=0.5, label='Excel Points')
+            _ax.legend()
+
         _ax.set_xlabel('x [mm]')
         _ax.set_ylabel('y [mm]')
         _ax.set_zlabel('z [mm]')
 
-    def posPlot(_ax):
-        _ax.plot(log['t'], log['y'][:,:3])
-        if log2 is not None:
-            _ax.plot(log2['t'], log2['y'][:,:3], '--')
-        _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
-        _ax.set_ylabel('p')
-    def splot(_ax):
-        _ax.plot(log['t'], log['y'][:,3:6])
-        _ax.axhline(y=0, color='k', alpha=0.3)
-        _ax.set_ylabel('s')
-    def inputsPlot(_ax1, _ax2):
-        _ax1.plot(log['t'], log['u'][:,0])
-        _ax1.axhline(y=0, color='k', alpha=0.3)
-        _ax1.set_ylabel('Sp. thrust')
-        _ax2.plot(log['t'], log['u'][:,1:])
-        _ax2.axhline(y=0, color='k', alpha=0.3)
-        _ax2.set_ylabel('Moments')
-    def velsPlot(_ax1, _ax2):
-        _ax1.plot(log['t'], log['y'][:,6:9])
-        _ax1.axhline(y=0, color='k', alpha=0.3)
-        _ax1.set_ylabel('v')
-        if _ax2 is not None:
-            _ax2.plot(log['t'], log['y'][:,9:12])
-            _ax2.axhline(y=0, color='k', alpha=0.3)
-            _ax2.set_ylabel('omega')
-    def accdesPlots(_ax1, _ax2):
-        _ax1.plot(log['t'], log['accdes'][:,:3])
-        _ax1.axhline(y=0, color='k', alpha=0.3)
-        _ax1.set_ylabel('accdes pos')
-        _ax2.plot(log['t'], log['accdes'][:,3:])
-        _ax2.axhline(y=0, color='k', alpha=0.3)
-        _ax2.set_ylabel('accdes ang')
-    def wlqpuPlots(_ax):
-        _ax.plot(log['t'], log['wlqpu'][:,:2])
-        _ax.plot(log['t'], log['wlqpu'][:,2:],'--')
-        _ax.legend(('0','1','2','3'))
-        _ax.set_ylabel('wlqpu')
-    
-    # fig = plt.figure()
-    # ax = [fig.add_subplot(3,3,i+1) for i in range(1,12)]
-    # posPlot(ax[0])
-    # splot(ax[1])
-    # inputsPlot(ax[2], ax[3])
-    # velsPlot(ax[4], ax[5])
-    # accdesPlots(ax[6], ax[7])
-    # wlqpuPlots(ax[8])
-    # fig.tight_layout()
-    
     fig = plt.figure(dpi=250)
-    ax3d = fig.add_subplot(1,1,1,projection='3d')
+    ax3d = fig.add_subplot(1, 1, 1, projection='3d')
     posParamPlot(ax3d)
 
     if callShow:
         plt.show()
+#
+# def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
+#     def posParamPlot(_ax):
+#         traj3plot(_ax, log['t'], log['y'][:,:3], log['y'][:,3:6], "Blues_r", vscale=vscale)
+#         aspectEqual3(_ax, log['y'][:,:3])
+#         if log2 is not None:
+#             traj3plot(_ax, log2['t'], log2['y'][:,:3], log2['y'][:,3:6], "Reds_r", vscale=vscale)
+#         # _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
+#         if goal0:
+#             _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
+#             _ax.legend(('MPC', 'Reactive', 'Goal'))
+#         else:
+#             _ax.legend(('MPC', 'Reactive'))
+#         if desTraj:
+#             _ax.plot(log['pdes'][:,0], log['pdes'][:,1], log['pdes'][:,2], 'k--', alpha=0.5, zorder=9)
+#         _ax.set_xlabel('x [mm]')
+#         _ax.set_ylabel('y [mm]')
+#         _ax.set_zlabel('z [mm]')
+#
+#     def posPlot(_ax):
+#         _ax.plot(log['t'], log['y'][:,:3])
+#         if log2 is not None:
+#             _ax.plot(log2['t'], log2['y'][:,:3], '--')
+#         _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
+#         _ax.set_ylabel('p')
+#     def splot(_ax):
+#         _ax.plot(log['t'], log['y'][:,3:6])
+#         _ax.axhline(y=0, color='k', alpha=0.3)
+#         _ax.set_ylabel('s')
+#     def inputsPlot(_ax1, _ax2):
+#         _ax1.plot(log['t'], log['u'][:,0])
+#         _ax1.axhline(y=0, color='k', alpha=0.3)
+#         _ax1.set_ylabel('Sp. thrust')
+#         _ax2.plot(log['t'], log['u'][:,1:])
+#         _ax2.axhline(y=0, color='k', alpha=0.3)
+#         _ax2.set_ylabel('Moments')
+#     def velsPlot(_ax1, _ax2):
+#         _ax1.plot(log['t'], log['y'][:,6:9])
+#         _ax1.axhline(y=0, color='k', alpha=0.3)
+#         _ax1.set_ylabel('v')
+#         if _ax2 is not None:
+#             _ax2.plot(log['t'], log['y'][:,9:12])
+#             _ax2.axhline(y=0, color='k', alpha=0.3)
+#             _ax2.set_ylabel('omega')
+#     def accdesPlots(_ax1, _ax2):
+#         _ax1.plot(log['t'], log['accdes'][:,:3])
+#         _ax1.axhline(y=0, color='k', alpha=0.3)
+#         _ax1.set_ylabel('accdes pos')
+#         _ax2.plot(log['t'], log['accdes'][:,3:])
+#         _ax2.axhline(y=0, color='k', alpha=0.3)
+#         _ax2.set_ylabel('accdes ang')
+#     def wlqpuPlots(_ax):
+#         _ax.plot(log['t'], log['wlqpu'][:,:2])
+#         _ax.plot(log['t'], log['wlqpu'][:,2:],'--')
+#         _ax.legend(('0','1','2','3'))
+#         _ax.set_ylabel('wlqpu')
+#
+#     # fig = plt.figure()
+#     # ax = [fig.add_subplot(3,3,i+1) for i in range(1,12)]
+#     # posPlot(ax[0])
+#     # splot(ax[1])
+#     # inputsPlot(ax[2], ax[3])
+#     # velsPlot(ax[4], ax[5])
+#     # accdesPlots(ax[6], ax[7])
+#     # wlqpuPlots(ax[8])
+#     # fig.tight_layout()
+#
+#     fig = plt.figure(dpi=250)
+#     ax3d = fig.add_subplot(1,1,1,projection='3d')
+#     posParamPlot(ax3d)
+#
+#     if callShow:
+#         plt.show()
 
 def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, trajAmp=0, ascentIC=False, showPlots=True, tpert=None, speedTest=False, perchTraj=False, flipTask=False, taulim=100, **kwargs):
     """trajFreq in Hz, trajAmp in mm"""
@@ -171,7 +211,7 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
 def logMetric(log):
     # A metric to plot about how good the tracking was
     Nt = len(log['t'])
-    perr = log['y'][:,:3]
+    perr = log['y'][:,:3] - log['pdes']
     tau = log['u'][:,1:3]
     serr = log['y'][:,3:6]
     serr[:,2] -= 1.0
@@ -180,7 +220,7 @@ def logMetric(log):
     for i in range(Nt):
         err += np.dot(perr[i,:], perr[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
         eff += np.dot(tau[i,:], tau[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
-    err /= Nt
+    err = np.sqrt(err/(3*Nt))
     eff /= Nt
     return err, eff
 
@@ -389,22 +429,24 @@ def papPlots(bmpc):
 if __name__ == "__main__":
     up, upc = createMPC()
 
-    # Helix
-    start = time.time()
-    # controlTest(upc, 500, useMPC=True, hlInterval=5)
-    log = controlTest(
-        up,
-        tend=10000,  # longer sim so you see the helix
-        useMPC=True,
-        trajAmp=100,  # radius of helix in mm
-        trajFreq=1,  # 1 Hz lateral motion
-        #hlInterval=5
-    )
-
-    end = time.time()
-    print("Time (ms) total:", end - start)
-    err, eff = logMetric(log)
-    print("RMS position error [mm]:", err)
+    log = controlTest(up, tend=10000, useMPC=True, trajAmp=100, trajFreq=1)
+    viewControlTestLog(log, excel_file="/Users/hannasigurdson/Documents/robobee3d/Book.xlsx")
+    # # Helix
+    # start = time.time()
+    # # controlTest(upc, 500, useMPC=True, hlInterval=5)
+    # log = controlTest(
+    #     up,
+    #     tend=10000,  # longer sim so you see the helix
+    #     useMPC=True,
+    #     trajAmp=100,  # radius of helix in mm
+    #     trajFreq=1,  # 1 Hz lateral motion
+    #     #hlInterval=5
+    # )
+    #
+    # end = time.time()
+    # print("Time (ms) total:", end - start)
+    # err, eff = logMetric(log)
+    # print("RMS position error [mm]:", err)
 # if __name__ == "__main__":
 #     up, upc = createMPC()
 #
