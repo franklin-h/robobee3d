@@ -387,7 +387,7 @@ def papPlots(bmpc):
     # perchTask()
 
 if __name__ == "__main__":
-    up, upc = createMPC()
+    up, upc = createMPC(use_QPOases=True)
 
     # Hover
     start = time.time()

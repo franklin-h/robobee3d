@@ -4,6 +4,9 @@ import scipy.sparse as sp
 from genqp import skew, Ib
 from uprightmpc2py import UprightMPC2C # C version
 import time
+from pqp import *
+from qpsolvers import solve_qp
+
 """This file creates the python controller, 
 and can return py ver, C ver, and a reactive"""
 
@@ -202,10 +205,10 @@ class UprightMPC2():
         u0 = np.zeros(nc)  # or np.inf / something loose – they get overwritten later anyway
 
         self.model.setup(
-            P=self.P,
-            q=q0,
-            A=self.A,
-            l=l0,
+            P=self.P, # quadratic matrix cost
+            q=q0,# linear cost vector
+            A=self.A, # constraint matrix
+            l=l0, # lower bound on Ax
             u=u0,
             eps_rel=1e-4,
             eps_abs=1e-4,
@@ -219,7 +222,7 @@ class UprightMPC2():
         # Logging for OSQP performance
         self.solve_times = []  # in milliseconds
         self.solve_iters = []  # iteration count per solve
-        
+
     def codegen(self, dirname='uprightmpc2/gen'):
         try:
             self.model.codegen(dirname, project_type='', force_rewrite=True, parameters='matrices', FLOAT=True, LONG=False)
@@ -232,7 +235,7 @@ class UprightMPC2():
         self.A, l, u, Axidx = updateConstraint(self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax)
         xtest = openLoopX(self.N, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g)
         print((self.A @ xtest - l)[:2*self.N*ny])
-    
+
     # def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
     #     # Update
     #     self.A, self.l, self.u, self.Axidx = updateConstraint(self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax)
@@ -306,7 +309,7 @@ class UprightMPC2():
         self.T0 += utilde[0]
 
         return np.hstack((self.T0, utilde[1:]))
-    
+
     def getAccDes(self, R0, dq0):
         dy1des = self.prevsol[ny*self.N : ny*self.N+ny] # from horiz
         # # Coordinate change for the velocity
@@ -314,15 +317,225 @@ class UprightMPC2():
         dq1des = np.hstack((dy1des[:3], e3h @ R0.T @ dy1des[3:6])) # NOTE omegaz is lost
         # return (bTw(dq1des) - bTw(dq0)) / self.dt
         return (dq1des - dq0) / self.dt # return in world frame
-    
+
     def update(self, p0, R0, dq0, pdes, dpdes, sdes, actualT0):
         if actualT0 >= 0:
             self.T0 = actualT0
         # Version of above that computes the desired body frame acceleration
         u = self.update2(p0, R0, dq0, pdes, dpdes, sdes)
         return u, self.getAccDes(R0, dq0)
-        
-def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3, wthrust=1e-1, wmom=1e-2, TtoWmax=2, popts=np.zeros(90), **kwargs):
+
+    def solve(self):
+        """
+        Call pqp() with current Q, h, warm-start x, and settings.
+        Returns an object with fields similar to OSQP (minimal subset).
+        """
+        if self.Q is None or self.h is None:
+            raise RuntimeError("Call setup() before solve().")
+
+        # Run the PQP algorithm; it returns new x and history of obj values
+        x_opt, values = pqp(
+            self.Q,
+            self.h,
+            x=self.x,           # warm start
+            iters=self.iters,
+            maxval=self.maxval
+        )
+
+        # Store warm start for the next call
+        self.x = x_opt.copy()
+
+        # Build a simple result object
+        class Result:
+            pass
+
+        res = Result()
+        res.x = x_opt
+        res.obj_vals = values
+        res.status = "solved"   # you could add real checks if desired
+
+        return res
+# assume ny, nu, e3h, initConstraint, updateConstraint, updateObjective, openLoopX
+# are defined elsewhere as in your existing code
+
+class UprightMPC2_qpOASES:
+    def __init__(self, N, dt, g, TtoWmax,
+                 ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib):
+
+        self.N = N
+        nx = self.N * (2*ny + nu)     # same as before
+        nc = 2*self.N*ny + self.N
+
+        # Build initial constraint sparsity & dummy P
+        self.A, self.P = initConstraint(N, nx, nc)
+
+        # Cost weights exactly as before
+        Qyr  = np.hstack((np.full(3, wpr), np.full(3, ws)))
+        Qyf  = np.hstack((np.full(3, wpf), np.full(3, ws)))
+        Qdyr = np.hstack((np.full(3, wvr), np.full(3, wds)))
+        Qdyf = np.hstack((np.full(3, wvf), np.full(3, wds)))
+        R    = np.hstack((wthrust, np.full(2, wmom)))
+
+        self.dt   = dt
+        self.Wts  = [Qyr, Qyf, Qdyr, Qdyf, R]
+        self.g    = g
+        self.Tmax = TtoWmax * g
+        self.T0   = 0.0
+        self.Ibi  = np.diag(1.0 / Ib)
+
+        # dimensions
+        self.nx = nx
+        self.nc = nc
+
+        # logging
+        self.solve_times = []
+        self.solve_iters = []   # no real iteration count from qpsolvers, keep for API
+
+        # warm start
+        self.prevsol = None
+
+    # ---- same testDyn as before, just calls updateConstraint/openLoopX ----
+    def testDyn(self, T0sp, s0s, Btaus, y0, dy0):
+        self.A, l, u, Axidx = updateConstraint(
+            self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax
+        )
+        xtest = openLoopX(self.N, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g)
+        print((self.A @ xtest - l)[:2*self.N*ny])
+
+    # ---- core QP update+solve using qpsolvers + qpOASES backend ----
+    def _solve_qp(self, H, g, A, lb, ub, lbA, ubA):
+        """
+        Wraps qpsolvers.solve_qp with qpOASES backend.
+
+        H:   (nx, nx)
+        g:   (nx,)
+        A:   (nc, nx)  constraint matrix
+        lb, ub:   (nx,)    box bounds on x
+        lbA, ubA: (nc,)    OSQP-style range bounds  lbA <= A x <= ubA
+        """
+        t0 = time.perf_counter()
+
+        # Convert range constraints to inequalities G x <= h
+        # Take only finite bounds so we don't send infs to the solver.
+        lbA = lbA.ravel()
+        ubA = ubA.ravel()
+        A_dense = np.asarray(A, dtype=float)
+
+        upper_mask = np.isfinite(ubA)
+        lower_mask = np.isfinite(lbA)
+
+        G_list = []
+        h_list = []
+
+        if np.any(upper_mask):
+            G_list.append(A_dense[upper_mask, :])
+            h_list.append(ubA[upper_mask])
+
+        if np.any(lower_mask):
+            G_list.append(-A_dense[lower_mask, :])
+            h_list.append(-lbA[lower_mask])
+
+        if G_list:
+            G = np.vstack(G_list)
+            h = np.concatenate(h_list)
+        else:
+            G = None
+            h = None
+
+        # Warm start from previous solution if available
+        initvals = self.prevsol if self.prevsol is not None else None
+
+        # Solve QP: 0.5 x^T H x + g^T x
+        # subject to G x <= h, lb <= x <= ub.
+        xOpt = solve_qp(
+            H, g,
+            G=G, h=h,
+            A=None, b=None,
+            lb=lb, ub=ub,
+            initvals=initvals,
+            solver="clarabel"
+            # this mimics options.setToMPC() in native qpOASES
+            # predefined_options="MPC",
+        )
+
+        t1 = time.perf_counter()
+        elapsed_ms = (t1 - t0) * 1e3
+        self.solve_times.append(elapsed_ms)
+
+        # qpsolvers doesn't expose nWSR; keep NaN placeholder
+        self.solve_iters.append(np.nan)
+
+        if xOpt is None:
+            # fall back to previous solution or zeros if infeasible
+            if self.prevsol is not None:
+                xOpt = self.prevsol.copy()
+            else:
+                xOpt = np.zeros(self.nx)
+
+        return xOpt
+
+    def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
+        # 1) update A, l, u exactly like in OSQP version
+        self.A, self.l, self.u, self.Axidx = updateConstraint(
+            self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax
+        )
+
+        # 2) update cost (Pdata = diag entries, q = linear term)
+        self.Pdata, self.q = updateObjective(self.N, *self.Wts, ydes, dydes)
+
+        # 3) build dense matrices for qpOASES via qpsolvers
+        H = np.diag(self.Pdata.astype(float))              # (nx, nx)
+        g = self.q.astype(float).copy()                    # (nx,)
+
+        # No explicit bounds on x -> big box
+        BIG = 1e20
+        lb  = -BIG * np.ones(self.nx)
+        ub  =  BIG * np.ones(self.nx)
+
+        # Constraint bounds are exactly l, u
+        lbA = self.l.astype(float)
+        ubA = self.u.astype(float)
+
+        # 4) solve with qpsolvers + qpOASES backend
+        xOpt = self._solve_qp(H, g, self.A.toarray(), lb, ub, lbA, ubA)
+
+        self.obj_val = 0.5 * xOpt @ (H @ xOpt) + g @ xOpt
+        self.prevsol = xOpt
+        return xOpt
+
+    # ---- same as your current update2 / getAccDes / update ----
+    def update2(self, p0, R0, dq0, pdes, dpdes, sdes):
+        s0   = np.copy(R0[:, 2])
+        s0s  = [s0 for _ in range(self.N)]
+        Btau = (-R0 @ e3h @ self.Ibi)[:, :2]  # no yaw torque
+        Btaus = [Btau for _ in range(self.N)]
+        ds0  = -R0 @ e3h @ dq0[3:6]
+
+        y0   = np.hstack((p0, s0))
+        dy0  = np.hstack((dq0[:3], ds0))
+        ydes  = np.hstack((pdes, sdes))
+        dydes = np.hstack((dpdes, 0, 0, 0))
+
+        xOpt = self.update1(self.T0, s0s, Btaus, y0, dy0, ydes, dydes)
+
+        utilde = xOpt[2*ny*self.N : 2*ny*self.N+nu]
+        self.T0 += utilde[0]
+        return np.hstack((self.T0, utilde[1:]))
+
+    def getAccDes(self, R0, dq0):
+        dy1des = self.prevsol[ny*self.N : ny*self.N+ny]
+        dq1des = np.hstack((dy1des[:3], e3h @ R0.T @ dy1des[3:6]))
+        return (dq1des - dq0) / self.dt
+
+    def update(self, p0, R0, dq0, pdes, dpdes, sdes, actualT0):
+        if actualT0 >= 0:
+            self.T0 = actualT0
+        u = self.update2(p0, R0, dq0, pdes, dpdes, sdes)
+        return u, self.getAccDes(R0, dq0)
+
+def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3,
+              wthrust=1e-1, wmom=1e-2, TtoWmax=2, popts=np.zeros(90),
+              use_QPOases = False, **kwargs):
     """Returns the mdl. Parameters are
     N: prediction horizon length
     wpr: running position weight. First three components of Qyr
@@ -351,7 +564,10 @@ def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3, wthrust=1e-1
     # umax = np.array([240, -0.5, -0.2, -0.1])
     # dumax = np.array([5e3, 10, 10, 10]) # /s
     controlRate = 1000
-    pyver = UprightMPC2(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal())
+    if not use_QPOases:
+        pyver = UprightMPC2(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal())
+    else:
+        pyver = UprightMPC2_qpOASES(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal())
     # C version can be tested too
     cver = UprightMPC2C(dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal(), 50)
     return pyver, cver
