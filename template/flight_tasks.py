@@ -47,3 +47,31 @@ def perch(t, initialPos, tend=500, trotstart=100, trotend=450, vdes=0.2):
     else:
         sdes = np.array([-1,0,0])
     return pdes, dpdes, sdes
+
+def perch_parab_pet(t, initialPos, tend=500, vdes=0.2):
+    pdes = np.zeros((3, len(t)))
+    pdes[:, 0] = initialPos
+    dpdes = np.zeros((3, len(t)))
+    dpdes[:, 0] = vdes
+
+    fpdes = [20, 20, 250]
+    sdes = np.zeros((3, len(t)))
+    sdes[2, :] = 1
+
+
+    if initialPos[2] >= fpdes[2]:
+        s2 = np.sqrt((fpdes[0] - initialPos[0]) ** 2 + (fpdes[1] - initialPos[1]) ** 2)
+        for i in range(1, len(pdes)):
+            pdes[i, 0] = pdes[i - 1, 0] + s2 / len(t)
+            pdes[i, 1] = pdes[i - 1, 1] + s2 / len(t)
+            pdes[i, 2] = pdes[i - 1, 2] + (fpdes[2] - initialPos[2])/len(t)
+    else:
+        Amp = (fpdes[2] - initialPos[2]) + 10
+        s2 = np.sqrt((fpdes[0] - initialPos[0]) ** 2 + (fpdes[1] - initialPos[1]) ** 2)
+        D = s2/(1 + np.sqrt(10/Amp))
+        for i in range(1, len(pdes)):
+            pdes[i, 0] = pdes[i-1, 0] + s2/len(t)
+            pdes[i, 1] = pdes[i-1, 1] + s2/len(t)
+            pdes[i, 2] = pdes[i-1, 2] + (Amp/D**2)*(np.sqrt((pdes[i, 0] - initialPos[0])**2 + (pdes[i, 1] - initialPos[1])**2) - D**2) + Amp
+
+    return pdes, dpdes, sdes

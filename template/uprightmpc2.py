@@ -22,7 +22,7 @@ from plot_helpers import *
 import time
 
 
-def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=0.4, excel_file=None):
+def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=0.4, excel_file1=None, excel_file2=None, excel_file3=None, color1=None, color2=None, color3=None):
     def posParamPlot(_ax):
         traj3plot(_ax, log['t'], log['y'][:, :3], log['y'][:, 3:6], "Blues_r", vscale=vscale)
         aspectEqual3(_ax, log['y'][:, :3])
@@ -40,13 +40,31 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True,
             _ax.plot(log['pdes'][:, 0], log['pdes'][:, 1], log['pdes'][:, 2], 'k--', alpha=0.5, zorder=9)
 
         # --- Add Excel points ---
-        if excel_file is not None:
-            df = pd.read_excel(excel_file)
+        if excel_file1 is not None:
+            df = pd.read_excel(excel_file1)
             if 'x' in df.columns and 'y' in df.columns and 'z' in df.columns:
                 points = df[['x', 'y', 'z']].to_numpy()
             else:
                 points = df.to_numpy()
-            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c='#ff69b4', s=0.1, alpha=0.5, label='Excel Points')
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color1, s=0.1, alpha=0.5, label='Excel Points')
+            _ax.legend()
+
+        if excel_file2 is not None:
+            df = pd.read_excel(excel_file2)
+            if 'x' in df.columns and 'y' in df.columns and 'z' in df.columns:
+                points = df[['x', 'y', 'z']].to_numpy()
+            else:
+                points = df.to_numpy()
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color2, s=0.1, alpha=0.5, label='Excel Points')
+            _ax.legend()
+
+        if excel_file3 is not None:
+            df = pd.read_excel(excel_file3)
+            if 'x' in df.columns and 'y' in df.columns and 'z' in df.columns:
+                points = df[['x', 'y', 'z']].to_numpy()
+            else:
+                points = df.to_numpy()
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color3, s=0.1, alpha=0.5, label='Excel Points')
             _ax.legend()
 
         _ax.set_xlabel('x [mm]')
@@ -150,10 +168,11 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
         p = np.array([0, 0, 0])
         Rb = np.eye(3) if flipTask else Rotation.from_euler('xyz', [0.5,-0.5,0]).as_matrix()
         dq[0] = 0.1
-    pdes = np.zeros(3)
-    dpdes = np.zeros(3)
-    sdes = np.array([0,0,1])
-    initialPos = np.copy(p)
+    # pdes = np.zeros(3)
+    # dpdes = np.zeros(3)
+    # sdes = np.array([0,0,1])
+    #initialPos = np.copy(p)
+    initialPos = np.array([0,0,0])
     
     tt = np.arange(tend, step=dtsim)
     Nt = len(tt)
@@ -166,32 +185,34 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
     uquad = np.zeros(3)
     thlPrev = 0
 
+    pdes, dpdes, sdes = flight_tasks.perch_parab_pet(tt, initialPos)
+
     for ti in range(Nt):
         # Traj to follow
-        if flipTask:
-            pdes, dpdes, sdes = flight_tasks.flip(tt[ti], initialPos)
-        elif perchTraj:
-            pdes, dpdes, sdes = flight_tasks.perch(tt[ti], initialPos)
-        elif speedTest:
-            pdes, dpdes, sdes = flight_tasks.straightAcc(tt[ti], initialPos, vdes=speedTestvdes, tduration=speedTestdur)
-        else:
-            pdes, dpdes, sdes = flight_tasks.helix(tt[ti], initialPos, trajAmp=trajAmp, trajFreq=trajFreq, dz=0.1, useY=True) # if useY is false, then it just moves back and forth while going up
-            # Add perturbation for this traj
-            if tpert is not None and tt[ti] > tpert:
-                dq[1] += 2
-                tpert = None
+        # if flipTask:
+        #     pdes, dpdes, sdes = flight_tasks.flip(tt[ti], initialPos)
+        # elif perchTraj:
+        #     pdes, dpdes, sdes = flight_tasks.perch(tt[ti], initialPos)
+        # elif speedTest:
+        #     pdes, dpdes, sdes = flight_tasks.straightAcc(tt[ti], initialPos, vdes=speedTestvdes, tduration=speedTestdur)
+        # else:
+        #     pdes, dpdes, sdes = flight_tasks.helix(tt[ti], initialPos, trajAmp=trajAmp, trajFreq=trajFreq, dz=0.1, useY=True) # if useY is false, then it just moves back and forth while going up
+        #     # Add perturbation for this traj
+        #     if tpert is not None and tt[ti] > tpert:
+        #         dq[1] += 2
+        #         tpert = None
 
         # Call HL controller
         if hlInterval is None or tt[ti] - thlPrev > hlInterval:
             if useMPC:
                 t1 = perf_counter()
                 actualT0 = -1.0  # seems like there's an error with not enough arguments below??
-                uquad, log['accdes'][ti,:] = mdl.update(p, Rb, dq, pdes, dpdes, sdes,actualT0)
+                uquad, log['accdes'][ti,:] = mdl.update(p, Rb, dq, pdes[:, ti], dpdes[:, ti], sdes[:, ti], actualT0)
                 avgTime += 0.01 * (perf_counter() - t1 - avgTime)
                 # # Alternate simulation by integrating accDes
                 # ddqdes = accdess[ti,:]
             else:
-                uquad = reactiveController(p, Rb, dq, pdes, **kwargs)
+                uquad = reactiveController(p, Rb, dq, pdes[:, ti], **kwargs)
             thlPrev = tt[ti]
         # u = np.array([1,0.1,0])
         # Input limit
@@ -201,7 +222,7 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
         p, Rb, dq = quadrotorNLDyn(p, Rb, dq, uquad, dtsim, ddq=ddqdes)
         log['y'][ti,:] = np.hstack((p, Rb[:,2], dq))
         log['u'][ti,:] = uquad
-        log['pdes'][ti,:] = pdes
+        log['pdes'][ti,:] = pdes[:,ti]
     if useMPC and showPlots:
         print("Time (ms):", avgTime * 1e3)
     if showPlots:
@@ -430,7 +451,8 @@ if __name__ == "__main__":
     up, upc = createMPC()
 
     log = controlTest(up, tend=10000, useMPC=True, trajAmp=100, trajFreq=1)
-    viewControlTestLog(log, excel_file="/Users/hannasigurdson/Documents/robobee3d/Book.xlsx")
+    viewControlTestLog(log, excel_file1="/Users/hannasigurdson/Documents/robobee3d/Flower_Petals.xlsx", color1='#FF00FF',excel_file2="/Users/hannasigurdson/Documents/robobee3d/Center.xlsx", color2='#EDC001',excel_file3="/Users/hannasigurdson/Documents/robobee3d/Stem.xlsx", color3='#0B6623')
+
     # # Helix
     # start = time.time()
     # # controlTest(upc, 500, useMPC=True, hlInterval=5)
