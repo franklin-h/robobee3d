@@ -210,8 +210,9 @@ class UprightMPC2():
             A=self.A, # constraint matrix
             l=l0, # lower bound on Ax
             u=u0,
-            eps_rel=1e-4,
-            eps_abs=1e-4,
+            eps_rel=1e-2,
+            eps_abs=1e-2,
+            max_iter = 70,
             verbose=False,
         )
 

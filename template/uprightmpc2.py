@@ -94,7 +94,12 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False
         plt.show()
 
 def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, trajAmp=0, ascentIC=False, showPlots=True, tpert=None, speedTest=False, perchTraj=False, flipTask=False, taulim=100, **kwargs):
-    """trajFreq in Hz, trajAmp in mm"""
+    """
+    You will hopefully have set a mdl with createMPC
+    (which itself calls UprightMPC2...). If not, this will
+    make an MPC for you.
+
+    trajFreq in Hz, trajAmp in mm"""
     if mdl is None and useMPC:
         mdl, _ = createMPC(**kwargs)
     speedTestvdes = 2 # m/s
@@ -387,7 +392,7 @@ def papPlots(bmpc):
     # perchTask()
 
 if __name__ == "__main__":
-    up, upc = createMPC(use_QPOases=True)
+    up, upc = createMPC(use_QPOases=False)
 
     # Hover
     start = time.time()
@@ -425,25 +430,25 @@ if __name__ == "__main__":
 
     # ---- Plot OSQP timing per MPC call ----
     if hasattr(up, "solve_times") and len(up.solve_times) > 0:
-        plt.figure()
-        plt.plot(up.solve_times, marker='o', linestyle='-')
-        plt.xlabel("MPC solve index")
-        plt.ylabel("OSQP solve time [ms]")
-        plt.title("OSQP solve time per MPC call")
-        plt.grid(True)
-        plt.tight_layout()
-        plt.ylim(0,0.1)
-        plt.show()
-
-        # Optional: also plot iteration counts
         # plt.figure()
-        # plt.plot(up.solve_iters, marker='o', linestyle='-')
+        # plt.plot(up.solve_times, marker='o', linestyle='-')
         # plt.xlabel("MPC solve index")
-        # plt.ylabel("OSQP iterations")
-        # plt.title("OSQP iterations per MPC call")
+        # plt.ylabel("OSQP solve time [ms]")
+        # plt.title("OSQP solve time per MPC call")
         # plt.grid(True)
         # plt.tight_layout()
+        # plt.ylim(0,0.1)
         # plt.show()
+
+        # Optional: also plot iteration counts
+        plt.figure()
+        plt.plot(up.solve_iters, marker='o', linestyle='-')
+        plt.xlabel("MPC solve index")
+        plt.ylabel("OSQP iterations")
+        plt.title("OSQP iterations per MPC call")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
 
 
 # if __name__ == "__main__":
