@@ -5,6 +5,7 @@ from genqp import skew, Ib
 from uprightmpc2py import UprightMPC2C # C version
 import time
 from pqp import *
+from qpsolvers import solve_qp
 # from qpsolvers import solve_qp
 from casadiQPOases import qpsolve as casadi_qpsolve
 
@@ -127,6 +128,7 @@ def updateConstraint(N, A, dt, T0, s0s, Btaus, y0, dy0, g, Tmax):
     # print("nAdata =",len(Axidx))
 
     # print(A[:,2*N*ny:2*N*ny+6].toarray())
+    fullA = A.toarray()
     return A, l, u, Axidx
 
 def updateObjective(N, Qyr, Qyf, Qdyr, Qdyf, R, ydes, dydes):

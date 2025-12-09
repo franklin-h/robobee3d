@@ -20,23 +20,83 @@ import progressbar
 from plot_helpers import *
 import time
 
-def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
+# def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=False, vscale=0.4):
+#     def posParamPlot(_ax):
+#         traj3plot(_ax, log['t'], log['y'][:,:3], log['y'][:,3:6], "Blues_r", vscale=vscale)
+#         aspectEqual3(_ax, log['y'][:,:3])
+#         if log2 is not None:
+#             traj3plot(_ax, log2['t'], log2['y'][:,:3], log2['y'][:,3:6], "Reds_r", vscale=vscale)
+#         # _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
+#         if goal0:
+#             _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
+#             _ax.legend(('MPC', 'Reactive', 'Goal'))
+#         else:
+#             _ax.legend(('MPC', 'Reactive'))
+#         if desTraj:
+#             _ax.plot(log['pdes'][:,0], log['pdes'][:,1], log['pdes'][:,2], 'k--', alpha=0.5, zorder=9)
+#         _ax.set_xlabel('x [mm]')
+#         _ax.set_ylabel('y [mm]')
+#         _ax.set_zlabel('z [mm]')
+
+def viewControlTestLog(
+    log,
+    log2=None,
+    callShow=True,
+    goal0=False,
+    desTraj=False,
+    vscale=0.4,
+    xlabel='x [mm]',
+    ylabel='y [mm]',
+    zlabel='z [mm]',
+    label_fontsize=12,
+    tick_fontsize=10,
+    label_pad = 10,
+):
+
     def posParamPlot(_ax):
-        traj3plot(_ax, log['t'], log['y'][:,:3], log['y'][:,3:6], "Blues_r", vscale=vscale)
-        aspectEqual3(_ax, log['y'][:,:3])
+        # Main trajectories
+        traj3plot(_ax, log['t'], log['y'][:, :3], log['y'][:, 3:6], "Blues_r", vscale=vscale)
+        aspectEqual3(_ax, log['y'][:, :3])
+
         if log2 is not None:
-            traj3plot(_ax, log2['t'], log2['y'][:,:3], log2['y'][:,3:6], "Reds_r", vscale=vscale)
-        # _ax.plot(log['t'], log['pdes'][:,0], 'k--', alpha=0.3)
+            traj3plot(_ax, log2['t'], log2['y'][:, :3], log2['y'][:, 3:6], "Reds_r", vscale=vscale)
+
+        # Goal marker
         if goal0:
             _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
-            _ax.legend(('MPC', 'Reactive', 'Goal'))
-        else:
-            _ax.legend(('MPC', 'Reactive'))
+
+        # Desired trajectory
         if desTraj:
-            _ax.plot(log['pdes'][:,0], log['pdes'][:,1], log['pdes'][:,2], 'k--', alpha=0.5, zorder=9)
-        _ax.set_xlabel('x [mm]')
-        _ax.set_ylabel('y [mm]')
-        _ax.set_zlabel('z [mm]')
+            _ax.plot(
+                log['pdes'][:, 0],
+                log['pdes'][:, 1],
+                log['pdes'][:, 2],
+                'k--',
+                alpha=0.5,
+                zorder=9,
+                label='Desired trajectory'
+            )
+
+        # Build legend labels
+        legend_labels = ['MPC']
+        if log2 is not None:
+            legend_labels.append('Reactive')
+        if goal0:
+            legend_labels.append('Goal')
+        if desTraj:
+            legend_labels.append('Desired trajectory')
+
+        _ax.legend(legend_labels)
+
+        # Axis labels with configurable fontsize
+        _ax.set_xlabel(xlabel, fontsize=label_fontsize, labelpad=label_pad)
+        _ax.set_ylabel(ylabel, fontsize=label_fontsize, labelpad=label_pad)
+        _ax.set_zlabel(zlabel, fontsize=label_fontsize, labelpad=label_pad)
+
+        # Tick label fontsize
+        _ax.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+
+    # ... rest of your function that creates the figure/axes and calls posParamPlot(...)
 
     def posPlot(_ax):
         _ax.plot(log['t'], log['y'][:,:3])
@@ -614,7 +674,7 @@ def run_sweep_and_save_non_osqp(DATA_FILE):
 
 #
 if __name__ == "__main__":
-    up, upc = createMPC(solver="qpOASES",eps_abs=1e-8)
+    up, upc = createMPC(solver="OSQP",eps_abs=1e-4)
 
     # Hover
     start = time.time()
@@ -624,18 +684,51 @@ if __name__ == "__main__":
     # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
 
     ## helix task
+    simEndTime = 5000
     log = controlTest(
         up,
-        tend=10000,  # longer sim so you see the helix
+        tend=simEndTime,  # longer sim so you see the helix
         useMPC=True,
         trajAmp=100,  # radius of helix in mm
         trajFreq=1,  # 1 Hz lateral motion
         hlInterval=5,
-        # tpert = 2000, #
+        tpert = 3000, #
         showPlots = True
     )
-    viewControlTestLog(log,vscale=75,desTraj=True)
+    viewControlTestLog(log,vscale=75,label_fontsize=20,tick_fontsize=15,desTraj=True)
 
+    # show z trajectory
+    plt.figure()
+    plt.plot(1e-3 * log['t'], log['y'][:, 2], label='z (actual)')  # [mm]
+
+    # optional: desired x trajectory
+    plt.plot(1e-3 * log['t'], log['pdes'][:, 2], 'k--', alpha=0.5, label='z (desired)')
+    label_fontsize = 20  # axis labels
+    tick_fontsize = 18  # tick labels
+
+    plt.xlabel('t [s]',fontsize=label_fontsize)
+    plt.ylabel('z [mm]',fontsize=label_fontsize)
+    plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+    plt.grid(True)
+    plt.legend(fontsize=0.75*tick_fontsize)
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure()
+    plt.plot(1e-3 * log['t'], log['y'][:, 0], label='x (actual)')  # [mm]
+
+    # optional: desired x trajectory
+    plt.plot(1e-3 * log['t'], log['pdes'][:, 0], 'k--', alpha=0.5, label='x (desired)')
+    label_fontsize = 20  # axis labels
+    tick_fontsize = 18  # tick labels
+
+    plt.xlabel('t [s]',fontsize=label_fontsize)
+    plt.ylabel('x [mm]',fontsize=label_fontsize)
+    plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+    plt.grid(True)
+    plt.legend(fontsize=0.75*tick_fontsize)
+    plt.tight_layout()
+    plt.show()
 #
     # # flip task
     # log = controlTest(
@@ -661,16 +754,33 @@ if __name__ == "__main__":
 #     print("Total sim time (s):", end - start)
 #
 #     # ---- Plot OSQP timing per MPC call ----
-#     if hasattr(up, "solve_times") and len(up.solve_times) > 0:
-#         plt.figure()
-#         plt.plot(up.solve_times, marker='o', linestyle='-')
-#         plt.xlabel("MPC solve index")
-#         plt.ylabel("OSQP solve time [ms]")
-#         plt.title("OSQP solve time per MPC call")
-#         plt.grid(True)
-#         plt.tight_layout()
-#         plt.ylim(0,0.1)
-#         plt.show()
+    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+        # Font / figure size parameters
+        num_solves = len(up.solve_times)
+
+        t_mpc_ms = np.linspace(0,simEndTime,num_solves,endpoint=False)
+        label_fontsize = 18  # axis labels
+        tick_fontsize = 16  # tick labels
+        title_fontsize = 16  # title
+        fig_size = (6, 4)  # inches (width, height)
+
+        plt.figure(figsize=fig_size)
+        plt.plot(t_mpc_ms/1000,up.solve_times, marker='o', linestyle='-')
+
+        plt.xlabel("Simulation time [s]", fontsize=label_fontsize)
+        plt.ylabel("OSQP solve time [ms]", fontsize=label_fontsize)
+        # plt.title("OSQP solve time per MPC call", fontsize=title_fontsize)
+
+        # Set tick label size for both axes
+        plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+
+        plt.grid(True)
+        plt.tight_layout()
+        # plt.ylim(0, 0.1)
+        plt.show()
+
+
+
 #
 #         # Optional: also plot iteration counts
 #         # plt.figure()
