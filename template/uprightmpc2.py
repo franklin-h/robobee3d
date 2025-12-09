@@ -11,7 +11,7 @@ import sys
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
+import os
 # mpl.use('macosx')
 # mpl.use('TkAgg')
 from mpl_toolkits.mplot3d import Axes3D
@@ -176,18 +176,35 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
 def logMetric(log):
     # A metric to plot about how good the tracking was
     Nt = len(log['t'])
-    perr = log['y'][:,:3]
-    tau = log['u'][:,1:3]
-    serr = log['y'][:,3:6]
-    serr[:,2] -= 1.0
+    perr = log['y'][:, :3] - log['pdes']
+    tau = log['u'][:, 1:3]
+    serr = log['y'][:, 3:6]
+    serr[:, 2] -= 1.0
     err = 0
     eff = 0
     for i in range(Nt):
-        err += np.dot(perr[i,:], perr[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
-        eff += np.dot(tau[i,:], tau[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
-    err /= Nt
+        err += np.dot(perr[i, :], perr[i, :])  # + 10 * np.dot(serr[i,:], serr[i,:])
+        eff += np.dot(tau[i, :], tau[i, :])  # + 10 * np.dot(serr[i,:], serr[i,:])
+    err = np.sqrt(err / (3 * Nt)) # this gives RMS error.
     eff /= Nt
     return err, eff
+
+
+# def logMetric(log):
+#     # A metric to plot about how good the tracking was
+#     Nt = len(log['t'])
+#     perr = log['y'][:,:3]
+#     tau = log['u'][:,1:3]
+#     serr = log['y'][:,3:6]
+#     serr[:,2] -= 1.0
+#     err = 0
+#     eff = 0
+#     for i in range(Nt):
+#         err += np.dot(perr[i,:], perr[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
+#         eff += np.dot(tau[i,:], tau[i,:])# + 10 * np.dot(serr[i,:], serr[i,:])
+#     err /= Nt
+#     eff /= Nt
+#     return err, eff
 
 def papPlots(bmpc):
     """Baseline mpc as argument"""
@@ -391,8 +408,213 @@ def papPlots(bmpc):
     # flipTask()
     # perchTask()
 
+def run_sweep_and_save():
+    vals = np.logspace(-5, 0, 50)   # 50 log-spaced tolerances 1e-5 ... 1
+    avg_times_ms = []
+    rms_errors   = []
+
+    for err_tol in vals:
+        print(f"\n=== Trial eps_rel=eps_abs={err_tol:.2e} ===")
+
+        up, upc = createMPC(
+            solver = "OSQP",
+            eps_rel=err_tol,
+            eps_abs=err_tol,
+        )
+
+        start = time.time()
+        log = controlTest(
+            up,
+            tend=4000,
+            useMPC=True,
+            trajAmp=100,
+            trajFreq=1,
+            hlInterval=5,
+            tpert=2000,
+            showPlots=False,
+        )
+        end = time.time()
+
+        if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+            avg_time_ms = 1e3 * np.mean(up.solve_times)
+        else:
+            num_solves = max(1, int(np.ceil(4000 / 5.0)))
+            avg_time_ms = 1e3 * (end - start) / num_solves
+
+        RMS_err, _ = logMetric(log)
+
+        avg_times_ms.append(avg_time_ms)
+        rms_errors.append(RMS_err)
+
+        print(f"  avg time: {avg_time_ms:.4f} ms,  RMS err: {RMS_err:.4f}")
+
+    avg_times_ms = np.array(avg_times_ms)
+    rms_errors   = np.array(rms_errors)
+
+    # ★ Save everything to disk
+    np.savez(
+        DATA_FILE,
+        vals=vals,
+        avg_times_ms=avg_times_ms,
+        rms_errors=rms_errors,
+    )
+    print(f"\nSaved results to {DATA_FILE}")
+
+def run_sweep_and_save_non_osqp(DATA_FILE):
+    vals = np.logspace(-5, 0, 50)   # 50 log-spaced tolerances 1e-5 ... 1
+    avg_times_ms = []
+    rms_errors   = []
+
+    for err_tol in vals:
+        print(f"\n=== Trial eps_rel=eps_abs={err_tol:.2e} ===")
+
+        up, upc = createMPC(
+            solver = "qpOASES",
+            eps_abs = err_tol,
+        )
+
+        start = time.time()
+        log = controlTest(
+            up,
+            tend=4000,
+            useMPC=True,
+            trajAmp=100,
+            trajFreq=1,
+            hlInterval=5,
+            tpert=2000,
+            showPlots=False,
+        )
+        end = time.time()
+
+        if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+            avg_time_ms = 1e3 * np.mean(up.solve_times)
+        else:
+            num_solves = max(1, int(np.ceil(4000 / 5.0)))
+            avg_time_ms = 1e3 * (end - start) / num_solves
+
+        RMS_err, _ = logMetric(log)
+
+        avg_times_ms.append(avg_time_ms)
+        rms_errors.append(RMS_err)
+
+        print(f"  avg time: {avg_time_ms:.4f} ms,  RMS err: {RMS_err:.4f}")
+
+    avg_times_ms = np.array(avg_times_ms)
+    rms_errors   = np.array(rms_errors)
+
+    # ★ Save everything to disk
+    np.savez(
+        DATA_FILE,
+        vals=vals,
+        avg_times_ms=avg_times_ms,
+        rms_errors=rms_errors,
+    )
+    print(f"\nSaved results to {DATA_FILE}")
+
+# sweep code
+# if __name__ == "__main__":
+#     # Option A: only recompute if data file is missing
+#     DATA_FILE = "osqp_sweep_results.npz"
+#     if not os.path.exists(DATA_FILE):
+#         run_sweep_and_save()
+#
+#     DATA_FILE_QPOAS = "qpoases_sweep_results.npz"
+#     if not os.path.exists(DATA_FILE_QPOAS):
+#         run_sweep_and_save_non_osqp(DATA_FILE_QPOAS)
+
+
+    # Option B: force recompute
+    # run_sweep_and_save()
+
+# if __name__ == "__main__":
+    # plot_from_file()
+#     # Sweep over OSQP tolerances
+#     vals = np.logspace(-5, 0, 50)   # 50 log-spaced tolerances from 1e-5 to 1
+#
+#     avg_times_ms = []
+#     rms_errors   = []
+#
+#     for err_tol in vals:
+#         print(f"\n=== Running trial with eps_rel = eps_abs = {err_tol:.2e} ===")
+#
+#         # Build MPC with this tolerance
+#         up, upc = createMPC(
+#             use_QPOases=False,
+#             eps_rel=err_tol,
+#             eps_abs=err_tol,
+#         )
+#
+#         # Helix task (same as your example, but no plotting)
+#         start = time.time()
+#         log = controlTest(
+#             up,
+#             tend=4000,       # same horizon as your helix example
+#             useMPC=True,
+#             trajAmp=100,     # radius of helix in mm
+#             trajFreq=1,      # 1 Hz lateral motion
+#             hlInterval=5,
+#             tpert=2000,
+#             showPlots=False  # IMPORTANT: keep off for batch runs
+#         )
+#         end = time.time()
+#
+#         # ---- Average OSQP time per MPC solve ----
+#         # Prefer the OSQP-reported times if available
+#         if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+#             avg_time_ms = 1e3 * np.mean(up.solve_times)
+#         else:
+#             # Fallback: approximate from wall-clock time
+#             # hlInterval=5 ms, tend=4000 ms => ~ tend/hlInterval solves
+#             num_solves = max(1, int(np.ceil(4000 / 5.0)))
+#             avg_time_ms = 1e3 * (end - start) / num_solves
+#
+#         avg_times_ms.append(avg_time_ms)
+#
+#         # ---- RMS tracking error ----
+#         RMS_err, _ = logMetric(log)
+#         rms_errors.append(RMS_err)
+#
+#         print(f"Average OSQP time: {avg_time_ms:.4f} ms")
+#         print(f"RMS tracking error: {RMS_err:.4f} (in mm, from logMetric)")
+#
+#     # Convert to numpy arrays for convenience
+#     avg_times_ms = np.array(avg_times_ms)
+#     rms_errors   = np.array(rms_errors)
+#
+#     # ---- Plot: average OSQP time vs. tolerance ----
+#     plt.figure()
+#     plt.semilogx(vals, avg_times_ms, marker='o')
+#     plt.xlabel(r"OSQP tolerance  $\epsilon$  (eps\_rel = eps\_abs)")
+#     plt.ylabel("Average OSQP solve time [ms]")
+#     plt.title("Average OSQP solve time vs. tolerance")
+#     plt.grid(True, which='both')
+#     plt.tight_layout()
+#
+#     # ---- Plot: RMS tracking error vs. tolerance ----
+#     plt.figure()
+#     plt.semilogx(vals, rms_errors, marker='o')
+#     plt.xlabel(r"OSQP tolerance  $\epsilon$  (eps\_rel = eps\_abs)")
+#     plt.ylabel("RMS tracking error [mm]")
+#     plt.title("RMS tracking error vs. tolerance")
+#     plt.grid(True, which='both')
+#     plt.tight_layout()
+#
+#     plt.show()
+#
+#     plt.figure()
+#     plt.semilogx(vals, rms_errors, marker='o')
+#     plt.xlabel(r"OSQP tolerance  $\epsilon$  (eps\_rel = eps\_abs)")
+#     plt.ylabel("RMS tracking error [mm]")
+#     plt.title("RMS tracking error vs. tolerance")
+#     plt.grid(True, which='both')
+#     plt.tight_layout()
+#     plt.xlim(1e-3,1)
+#
+#     plt.show()
+
+#
 if __name__ == "__main__":
-    up, upc = createMPC(use_QPOases=False)
+    up, upc = createMPC(solver="qpOASES",eps_abs=1e-8)
 
     # Hover
     start = time.time()
@@ -402,77 +624,66 @@ if __name__ == "__main__":
     # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
 
     ## helix task
-    # log = controlTest(
-    #     up,
-    #     tend=4000,  # longer sim so you see the helix
-    #     useMPC=True,
-    #     trajAmp=100,  # radius of helix in mm
-    #     trajFreq=1,  # 1 Hz lateral motion
-    #     hlInterval=5,
-    #     tpert = 2000, #
-    #     showPlots = False
-    # )
-    # viewControlTestLog(log,vscale=75,desTraj=True)
-
-
-    # flip task
     log = controlTest(
         up,
-        tend=1000,
+        tend=10000,  # longer sim so you see the helix
         useMPC=True,
-        flipTask=True,
-        showPlots=False   # or False if you’ll use viewControlTestLog yourself
+        trajAmp=100,  # radius of helix in mm
+        trajFreq=1,  # 1 Hz lateral motion
+        hlInterval=5,
+        # tpert = 2000, #
+        showPlots = True
     )
-    viewControlTestLog(log,vscale=25,desTraj=True)
+    viewControlTestLog(log,vscale=75,desTraj=True)
 
-    end = time.time()
-    print("Total sim time (s):", end - start)
-
-    # ---- Plot OSQP timing per MPC call ----
-    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
-        # plt.figure()
-        # plt.plot(up.solve_times, marker='o', linestyle='-')
-        # plt.xlabel("MPC solve index")
-        # plt.ylabel("OSQP solve time [ms]")
-        # plt.title("OSQP solve time per MPC call")
-        # plt.grid(True)
-        # plt.tight_layout()
-        # plt.ylim(0,0.1)
-        # plt.show()
-
-        # Optional: also plot iteration counts
-        plt.figure()
-        plt.plot(up.solve_iters, marker='o', linestyle='-')
-        plt.xlabel("MPC solve index")
-        plt.ylabel("OSQP iterations")
-        plt.title("OSQP iterations per MPC call")
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
-
-
-# if __name__ == "__main__":
-#     up, upc = createMPC()
 #
-#     # Hover
-#     start = time.time()
-#     # controlTest(upc, 500, useMPC=True, hlInterval=5)
-#     controlTest(
-#         up,
-#         tend=10000,  # longer sim so you see the helix
-#         useMPC=True,
-#         trajAmp=100,  # radius of helix in mm
-#         trajFreq=1,  # 1 Hz lateral motion
-#         hlInterval=5
-#     )
+    # # flip task
+    # log = controlTest(
+    #     up,
+    #     tend=1000,
+    #     useMPC=True,
+    #     flipTask=True,
+    #     showPlots=False   # or False if you’ll use viewControlTestLog yourself
+    # )
+    # viewControlTestLog(log,vscale=25,desTraj=True)
+
+#     # perch task
+#     # log = controlTest(
+#     #     up,
+#     #     tend=1000,
+#     #     useMPC=True,
+#     #     perchTraj=True,
+#     #     showPlots=False,
+#     # )
+#     # viewControlTestLog(log,vscale=25,desTraj=True)
 #
 #     end = time.time()
-#     print(end - start)
+#     print("Total sim time (s):", end - start)
 #
-#     # # Ascent
-#     # controlTest(up, 500, useMPC=True, ascentIC=True)
-#     # # Traj
-#     # controlTest(upc, 2000, useMPC=True, trajAmp=50, trajFreq=1, hlInterval=5)
+#     # ---- Plot OSQP timing per MPC call ----
+#     if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+#         plt.figure()
+#         plt.plot(up.solve_times, marker='o', linestyle='-')
+#         plt.xlabel("MPC solve index")
+#         plt.ylabel("OSQP solve time [ms]")
+#         plt.title("OSQP solve time per MPC call")
+#         plt.grid(True)
+#         plt.tight_layout()
+#         plt.ylim(0,0.1)
+#         plt.show()
 #
-#
-#     # papPlots(up)
+#         # Optional: also plot iteration counts
+#         # plt.figure()
+#         # plt.plot(up.solve_iters, marker='o', linestyle='-')
+#         # plt.xlabel("MPC solve index")
+#         # plt.ylabel("OSQP iterations")
+#         # plt.title("OSQP iterations per MPC call")
+#         # plt.grid(True)
+#         # plt.tight_layout()
+#         # plt.show()
+#     RMS_err,_ = logMetric(log)
+#     print(RMS_err)
+
+
+
+

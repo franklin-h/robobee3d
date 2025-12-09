@@ -5,7 +5,8 @@ from genqp import skew, Ib
 from uprightmpc2py import UprightMPC2C # C version
 import time
 from pqp import *
-from qpsolvers import solve_qp
+# from qpsolvers import solve_qp
+from casadiQPOases import qpsolve as casadi_qpsolve
 
 """This file creates the python controller, 
 and can return py ver, C ver, and a reactive"""
@@ -171,7 +172,7 @@ def openLoopX(N, dt, T0, s0s, Btaus, y0, dy0, g):
     return x
 
 class UprightMPC2():
-    def __init__(self, N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib):
+    def __init__(self, N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib,eps_rel_in,eps_abs_in):
         self.N = N
 
         nx = self.N * (2*ny + nu)
@@ -210,8 +211,8 @@ class UprightMPC2():
             A=self.A, # constraint matrix
             l=l0, # lower bound on Ax
             u=u0,
-            eps_rel=1e-2,
-            eps_abs=1e-2,
+            eps_rel=eps_rel_in,
+            eps_abs=eps_abs_in,
             max_iter = 70,
             verbose=False,
         )
@@ -359,9 +360,9 @@ class UprightMPC2():
 # assume ny, nu, e3h, initConstraint, updateConstraint, updateObjective, openLoopX
 # are defined elsewhere as in your existing code
 
-class UprightMPC2_qpOASES:
+class UprightMPC2Other:
     def __init__(self, N, dt, g, TtoWmax,
-                 ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib):
+                 ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib,err_tol_in):
 
         self.N = N
         nx = self.N * (2*ny + nu)     # same as before
@@ -394,6 +395,9 @@ class UprightMPC2_qpOASES:
 
         # warm start
         self.prevsol = None
+
+        # store the error tolerance as a member
+        self.err_tol = err_tol_in
 
     # ---- same testDyn as before, just calls updateConstraint/openLoopX ----
     def testDyn(self, T0sp, s0s, Btaus, y0, dy0):
@@ -454,7 +458,8 @@ class UprightMPC2_qpOASES:
             A=None, b=None,
             lb=lb, ub=ub,
             initvals=initvals,
-            solver="clarabel"
+            solver="qpoases",
+            terminationTolerance = self.err_tol
             # this mimics options.setToMPC() in native qpOASES
             # predefined_options="MPC",
         )
@@ -534,9 +539,159 @@ class UprightMPC2_qpOASES:
         u = self.update2(p0, R0, dq0, pdes, dpdes, sdes)
         return u, self.getAccDes(R0, dq0)
 
+class UprightMPC2qpOases:
+    def __init__(self, N, dt, g, TtoWmax,
+                 ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib, err_tol_in):
+
+        self.N = N
+        nx = self.N * (2 * ny + nu)
+        nc = 2 * self.N * ny + self.N
+
+        # Constraint structure and dummy P (sparsity only)
+        self.A, self.P = initConstraint(N, nx, nc)
+
+        # Cost weights (same pattern as UprightMPC2 / UprightMPC2_Other)
+        Qyr  = np.hstack((np.full(3, wpr), np.full(3, ws)))
+        Qyf  = np.hstack((np.full(3, wpf), np.full(3, ws)))
+        Qdyr = np.hstack((np.full(3, wvr), np.full(3, wds)))
+        Qdyf = np.hstack((np.full(3, wvf), np.full(3, wds)))
+        R    = np.hstack((wthrust, np.full(2, wmom)))
+
+        self.dt   = dt
+        self.Wts  = [Qyr, Qyf, Qdyr, Qdyf, R]
+        self.g    = g
+        self.Tmax = TtoWmax * g
+        self.T0   = 0.0
+        self.Ibi  = np.diag(1.0 / Ib)
+
+        self.nx = nx
+        self.nc = nc
+
+        # logging
+        self.solve_times = []
+        self.solve_iters = []   # qpOASES nWSR not exposed here; keep NaN placeholder
+
+        # warm start
+        self.prevsol = None
+
+        # store error tolerance (used as terminationTolerance in qpOASES)
+        self.err_tol = err_tol_in
+
+    def testDyn(self, T0sp, s0s, Btaus, y0, dy0):
+        # Same test as in other controllers
+        self.A, l, u, Axidx = updateConstraint(
+            self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax
+        )
+        xtest = openLoopX(self.N, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g)
+        print((self.A @ xtest - l)[:2 * self.N * ny])
+
+    def _solve_qp(self, H, g, A, lbA, ubA):
+        """
+        Wrapper around casadi_qpsolve (CasADi + qpOASES):
+
+            min 0.5 x^T H x + g^T x
+            s.t. lbA <= A x <= ubA
+                 lbx <= x <= ubx    (here we use wide box bounds)
+        """
+        t0 = time.perf_counter()
+
+        # Box bounds: effectively unbounded
+        BIG = 1e20
+        lbx = -BIG * np.ones(self.nx)
+        ubx =  BIG * np.ones(self.nx)
+
+        # Ensure dense ndarray for CasADi
+        A_dense = np.asarray(A, dtype=float)
+        lbA = np.asarray(lbA, dtype=float).ravel()
+        ubA = np.asarray(ubA, dtype=float).ravel()
+
+        try:
+            x_opt = casadi_qpsolve(
+                H,
+                g,
+                lbx,
+                ubx,
+                A=A_dense,
+                lba=lbA,
+                uba=ubA,
+                termination_tol=self.err_tol,
+                verbose=False,
+            )
+        except Exception as e:
+            print("[UprightMPC2qpOases] qpOASES solve failed:", repr(e))
+
+            # Fallback if qpOASES fails (keep controller alive)
+            if self.prevsol is not None:
+                x_opt = self.prevsol.copy()
+            else:
+                x_opt = np.zeros(self.nx)
+
+        t1 = time.perf_counter()
+        elapsed_ms = (t1 - t0) * 1e3
+        self.solve_times.append(elapsed_ms)
+        self.solve_iters.append(np.nan)  # qpOASES iteration count not available here
+
+        return x_opt
+
+    def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
+        # 1) update constraint matrix and bounds
+        self.A, self.l, self.u, self.Axidx = updateConstraint(
+            self.N, self.A, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g, self.Tmax
+        )
+
+        # 2) update objective (returns diagonal entries and linear term)
+        self.Pdata, self.q = updateObjective(self.N, *self.Wts, ydes, dydes)
+
+        # 3) build dense Hessian and gradient for qpOASES
+        H = np.diag(self.Pdata.astype(float))   # (nx, nx)
+        g = self.q.astype(float).copy()         # (nx,)
+
+        # 4) A x is constrained between l and u
+        lbA = self.l
+        ubA = self.u
+
+        # 5) solve QP using CasADi + qpOASES
+        x_opt = self._solve_qp(H, g, self.A.toarray(), lbA, ubA)
+
+        # store solution, objective value, etc.
+        self.prevsol = x_opt
+        self.obj_val = 0.5 * x_opt @ (H @ x_opt) + g @ x_opt
+
+        return x_opt
+
+    def update2(self, p0, R0, dq0, pdes, dpdes, sdes):
+        # Same structure as other MPC classes
+        s0   = np.copy(R0[:, 2])
+        s0s  = [s0 for _ in range(self.N)]
+        Btau = (-R0 @ e3h @ self.Ibi)[:, :2]  # no yaw torque
+        Btaus = [Btau for _ in range(self.N)]
+        ds0  = -R0 @ e3h @ dq0[3:6]
+
+        y0   = np.hstack((p0, s0))
+        dy0  = np.hstack((dq0[:3], ds0))
+        ydes  = np.hstack((pdes, sdes))
+        dydes = np.hstack((dpdes, 0, 0, 0))
+
+        x_opt = self.update1(self.T0, s0s, Btaus, y0, dy0, ydes, dydes)
+
+        utilde = x_opt[2 * ny * self.N : 2 * ny * self.N + nu]
+        self.T0 += utilde[0]
+        return np.hstack((self.T0, utilde[1:]))
+
+    def getAccDes(self, R0, dq0):
+        dy1des = self.prevsol[ny * self.N : ny * self.N + ny]
+        dq1des = np.hstack((dy1des[:3], e3h @ R0.T @ dy1des[3:6]))
+        return (dq1des - dq0) / self.dt
+
+    def update(self, p0, R0, dq0, pdes, dpdes, sdes, actualT0):
+        if actualT0 >= 0:
+            self.T0 = actualT0
+        u = self.update2(p0, R0, dq0, pdes, dpdes, sdes)
+        return u, self.getAccDes(R0, dq0)
+
 def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3,
               wthrust=1e-1, wmom=1e-2, TtoWmax=2, popts=np.zeros(90),
-              use_QPOases = False, **kwargs):
+              solver = "OSQP",eps_rel=1e-4,eps_abs=1e-4, **kwargs):
     """Returns the mdl. Parameters are
     N: prediction horizon length
     wpr: running position weight. First three components of Qyr
@@ -565,10 +720,18 @@ def createMPC(N=3, ws=1e1, wds=1e3, wpr=1, wvr=1e3, wpf=5, wvf=2e3,
     # umax = np.array([240, -0.5, -0.2, -0.1])
     # dumax = np.array([5e3, 10, 10, 10]) # /s
     controlRate = 1000
-    if not use_QPOases:
-        pyver = UprightMPC2(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal())
+    if solver == "OSQP":
+        pyver = UprightMPC2(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal(),eps_rel,eps_abs)
+    elif solver == "qpOASES":
+        # Use CasADi + qpOASES-based MPC
+        pyver = UprightMPC2qpOases(
+            N, dt, g, TtoWmax,
+            ws, wds, wpr, wpf, wvr, wvf,
+            wthrust, wmom, Ib.diagonal(),
+            eps_abs  # use eps_abs as termination tol
+        )
     else:
-        pyver = UprightMPC2_qpOASES(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal())
+        pyver = UprightMPC2Other(N, dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal(),eps_abs)
     # C version can be tested too
     cver = UprightMPC2C(dt, g, TtoWmax, ws, wds, wpr, wpf, wvr, wvf, wthrust, wmom, Ib.diagonal(), 50)
     return pyver, cver
