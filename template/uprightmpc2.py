@@ -13,7 +13,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-# mpl.use('macosx')
+mpl.use('macosx')
 mpl.use('QtAgg')
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -22,31 +22,19 @@ from plot_helpers import *
 import time
 
 
-def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=0.4, excel_file1=None, excel_file2=None, excel_file3=None, color1=None, color2=None, color3=None):
+def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True, vscale=25, excel_file1=None, excel_file2=None, excel_file3=None, color1=None, color2=None, color3=None):
     def posParamPlot(_ax):
-        traj3plot(_ax, log['t'], log['y'][:, :3], log['y'][:, 3:6], "Blues_r", vscale=vscale)
-        aspectEqual3(_ax, log['y'][:, :3])
-
-        if log2 is not None:
-            traj3plot(_ax, log2['t'], log2['y'][:, :3], log2['y'][:, 3:6], "Reds_r", vscale=vscale)
-
-        if goal0:
-            _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
-            _ax.legend(('MPC', 'Reactive', 'Goal'))
-        else:
-            _ax.legend(('MPC', 'Reactive'))
-
-        if desTraj:
-            _ax.plot(log['pdes'][:, 0], log['pdes'][:, 1], log['pdes'][:, 2], 'k--', alpha=0.5, zorder=9)
 
         # --- Add Excel points ---
+
+
         if excel_file1 is not None:
             df = pd.read_excel(excel_file1)
             if 'x' in df.columns and 'y' in df.columns and 'z' in df.columns:
                 points = df[['x', 'y', 'z']].to_numpy()
             else:
                 points = df.to_numpy()
-            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color1, s=0.1, alpha=0.5, label='Excel Points')
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color1, s=3, alpha=0.2)
             _ax.legend()
 
         if excel_file2 is not None:
@@ -55,7 +43,7 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True,
                 points = df[['x', 'y', 'z']].to_numpy()
             else:
                 points = df.to_numpy()
-            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color2, s=0.1, alpha=0.5, label='Excel Points')
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color2, s=3, alpha=0.2)
             _ax.legend()
 
         if excel_file3 is not None:
@@ -64,16 +52,54 @@ def viewControlTestLog(log, log2=None, callShow=True, goal0=False, desTraj=True,
                 points = df[['x', 'y', 'z']].to_numpy()
             else:
                 points = df.to_numpy()
-            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color3, s=0.1, alpha=0.5, label='Excel Points')
+            _ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=color3, s=3, alpha=0.2)
             _ax.legend()
+
+
+        traj3plot(_ax, log['t'], log['y'][:, :3], log['y'][:, 3:6], "Blues_r", vscale=vscale)
+
+        if log2 is not None:
+            traj3plot(_ax, log2['t'], log2['y'][:, :3], log2['y'][:, 3:6], "Reds_r", vscale=vscale)
+
+        if goal0:
+            _ax.plot([0], [0], [0], 'g*', markersize=10, zorder=10)
+            _ax.legend(('MPC', 'Reactive', 'Goal'))
+
+
+        if desTraj:
+            _ax.plot(log['pdes'][:, 0], log['pdes'][:, 1], log['pdes'][:, 2], color="black", linestyle=(0, (1, 1)),
+                     alpha=0.3,zorder=9)
+
+        aspectEqual3(_ax, log['y'][:, :3])
+
+        fig.patch.set_facecolor('white')
+        _ax.set_facecolor('white')
+
+        # Remove 3D pane colors
+        _ax.xaxis.pane.set_facecolor((1, 1, 1, 0))
+        _ax.yaxis.pane.set_facecolor((1, 1, 1, 0))
+        _ax.zaxis.pane.set_facecolor((1, 1, 1, 0))
+
+        _ax.grid(True)  # enable grid
+
+        # Set light grey, thin, dashed lines
+        light_grey = (0.8, 0.8, 0.8, 0.5)  # RGBA: light grey with some transparency
+        _ax.xaxis._axinfo['grid'].update(color=light_grey, linestyle='--', linewidth=0.5)
+        _ax.yaxis._axinfo['grid'].update(color=light_grey, linestyle='--', linewidth=0.5)
+        _ax.zaxis._axinfo['grid'].update(color=light_grey, linestyle='--', linewidth=0.5)
 
         _ax.set_xlabel('x [mm]')
         _ax.set_ylabel('y [mm]')
         _ax.set_zlabel('z [mm]')
 
+
+
+
     fig = plt.figure(dpi=250)
     ax3d = fig.add_subplot(1, 1, 1, projection='3d')
     posParamPlot(ax3d)
+
+
 
     if callShow:
         plt.show()
@@ -162,17 +188,18 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
     if ascentIC or speedTest or perchTraj:
         p = np.array([0, 0, -50]) if ascentIC else np.array([-speedTestdur*speedTestvdes, 0, 0])
         if perchTraj:
-            p = np.array([-100, 0, 0])
+            p = np.array([-50, 0, 0])
         Rb = np.eye(3)
     else:
         p = np.array([0, 0, 0])
-        Rb = np.eye(3) if flipTask else Rotation.from_euler('xyz', [0.5,-0.5,0]).as_matrix()
+        Rb = np.eye(3) if flipTask else Rotation.from_euler('xyz', [0,-0,0]).as_matrix()
         dq[0] = 0.1
     # pdes = np.zeros(3)
     # dpdes = np.zeros(3)
     # sdes = np.array([0,0,1])
-    #initialPos = np.copy(p)
-    initialPos = np.array([0,0,0])
+    p = np.array([-50, -100, 10])
+    initialPos = np.copy(p)
+
     
     tt = np.arange(tend, step=dtsim)
     Nt = len(tt)
@@ -226,7 +253,10 @@ def controlTest(mdl, tend, dtsim=0.2, hlInterval=None, useMPC=True, trajFreq=0, 
     if useMPC and showPlots:
         print("Time (ms):", avgTime * 1e3)
     if showPlots:
-        viewControlTestLog(log)
+        viewControlTestLog(log, excel_file1="/Users/hannasigurdson/Documents/robobee3d/Flower_Petals.xlsx",
+                           color1='#FF00FF', excel_file2="/Users/hannasigurdson/Documents/robobee3d/Center.xlsx",
+                           color2='#EDC001', excel_file3="/Users/hannasigurdson/Documents/robobee3d/Stem.xlsx",
+                           color3='#0B6623')
     return log
 
 def logMetric(log):
@@ -451,7 +481,7 @@ if __name__ == "__main__":
     up, upc = createMPC()
 
     log = controlTest(up, tend=10000, useMPC=True, trajAmp=100, trajFreq=1)
-    viewControlTestLog(log, excel_file1="/Users/hannasigurdson/Documents/robobee3d/Flower_Petals.xlsx", color1='#FF00FF',excel_file2="/Users/hannasigurdson/Documents/robobee3d/Center.xlsx", color2='#EDC001',excel_file3="/Users/hannasigurdson/Documents/robobee3d/Stem.xlsx", color3='#0B6623')
+    #viewControlTestLog(log, excel_file1="/Users/hannasigurdson/Documents/robobee3d/Flower_Petals.xlsx", color1='#FF00FF',excel_file2="/Users/hannasigurdson/Documents/robobee3d/Center.xlsx", color2='#EDC001',excel_file3="/Users/hannasigurdson/Documents/robobee3d/Stem.xlsx", color3='#0B6623')
 
     # # Helix
     # start = time.time()
