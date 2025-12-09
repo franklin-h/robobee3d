@@ -47,3 +47,34 @@ def perch(t, initialPos, tend=500, trotstart=100, trotend=450, vdes=0.2):
     else:
         sdes = np.array([-1,0,0])
     return pdes, dpdes, sdes
+
+def perch_parab_pet(t, initialPos, tend=500, vdes=0.2):
+    pdes = np.zeros((3, len(t)))
+    dpdes = np.zeros((3, len(t)))
+    sdes = np.zeros((3, len(t)))
+
+    pdes[:, 0] = initialPos
+    sdes[2, :] = 1 #keep vertical orientation
+
+    fpdes = np.array([0, 0, 250])
+
+    if initialPos[2] >= fpdes[2]:
+        s2 = np.sqrt((fpdes[0] - initialPos[0]) ** 2 + (fpdes[1] - initialPos[1]) ** 2)
+        for i in range(1, len(t)):
+            pdes[0, i] = pdes[0, i-1] +  (fpdes[0] - initialPos[0])/len(t)
+            pdes[1, i] = pdes[1, i-1] +  (fpdes[1] - initialPos[1])/len(t)
+            pdes[2, i] = pdes[2, i-1] + (fpdes[2] - initialPos[2])/len(t)
+    else:
+        Amp = (fpdes[2] - initialPos[2]) + 20
+        s2 = np.sqrt((fpdes[0] - initialPos[0]) ** 2 + (fpdes[1] - initialPos[1]) ** 2)
+        D = s2/(1 + np.sqrt(20/Amp))
+
+        for i in range(1, len(t)):
+            pdes[0, i] = pdes[0, i-1] + (fpdes[0] - initialPos[0])/(len(t)-1)
+            pdes[1, i] = pdes[1, i-1] + (fpdes[1] - initialPos[1])/(len(t)-1)
+            pdes[2, i] = initialPos[2] - (Amp/(D**2))*(np.sqrt((pdes[0, i] - initialPos[0])**2 + (pdes[1, i] - initialPos[1])**2) - D)**2 + Amp
+            #pdes[2, i] = initialPos[2] + (1/(len(t) - 1)) * (fpdes[2] - initialPos[2]) + 4 * Amp * (1/(len(t) - 1)) * (1 - (1/(len(t) - 1)))
+
+        dpdes = np.gradient(pdes, axis=1)  # rough numerical; refine if needed   # Optional: feedforward velocity (first derivative)
+
+    return pdes, dpdes, sdes
