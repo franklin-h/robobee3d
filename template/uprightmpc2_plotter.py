@@ -47,12 +47,13 @@ def plot_from_file(model: str = "osqp"):
     tick_fs = 20
 
     tol_xlabel = rf"{solver_label} tolerance  $\epsilon_{{\mathrm{{abs}}}}$"
-    time_ylabel = f"Average {solver_label} solve time [ms]"
+    time_ylabel = f"Avg {solver_label} sol. time [ms]"
     err_ylabel = "RMS tracking error [mm]"
 
-    # --- 1) Avg solve time vs tolerance (x log, y linear) ---
+    # --- 1) Avg solve time vs tolerance (x log, y log) ---
     fig1, ax1 = plt.subplots()
     ax1.semilogx(vals, avg_times_ms, marker="o")
+    ax1.set_yscale("log")  # NEW: log scale on y
     ax1.set_xlabel(tol_xlabel, fontsize=label_fs)
     ax1.set_ylabel(time_ylabel, fontsize=label_fs)
     ax1.tick_params(axis="both", labelsize=tick_fs)
@@ -68,7 +69,7 @@ def plot_from_file(model: str = "osqp"):
     # --- 2) RMS tracking error vs tolerance (full, x log, y log) ---
     fig2, ax2 = plt.subplots()
     ax2.semilogx(vals, rms_errors, marker="o")
-    ax2.set_yscale("log")  # NEW: log scale on y
+    ax2.set_yscale("log")
     ax2.set_xlabel(tol_xlabel, fontsize=label_fs)
     ax2.set_ylabel(err_ylabel, fontsize=label_fs)
     ax2.tick_params(axis="both", labelsize=tick_fs)
@@ -84,7 +85,7 @@ def plot_from_file(model: str = "osqp"):
     # --- 3) RMS tracking error vs tolerance, zoomed (x log, y log) ---
     fig3, ax3 = plt.subplots()
     ax3.semilogx(vals, rms_errors, marker="o")
-    ax3.set_yscale("log")  # NEW: log scale on y
+    ax3.set_yscale("log")
     ax3.set_xlabel(tol_xlabel, fontsize=label_fs)
     ax3.set_ylabel(err_ylabel, fontsize=label_fs)
     ax3.tick_params(axis="both", labelsize=tick_fs)
@@ -118,4 +119,4 @@ def plot_from_file(model: str = "osqp"):
 
 
 if __name__ == "__main__":
-    plot_from_file("qpOASES")
+    plot_from_file("OSQP")

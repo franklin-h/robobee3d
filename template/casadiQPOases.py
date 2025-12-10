@@ -11,6 +11,9 @@ def qpsolve(
     uba=NP.zeros(0),
     termination_tol=1e-6,
     verbose=False,
+    x0=None,        # <-- new: primal warm start
+    lam_x0=None,    # <-- optional: dual warm start for simple bounds
+    lam_a0=None,    # <-- optional: dual warm start for linear constraints
 ):
     # Convert to CasADi DM
     H   = C.DM(H)
@@ -22,6 +25,14 @@ def qpsolve(
     lba = C.DM(lba).reshape((-1, 1))
     uba = C.DM(uba).reshape((-1, 1))
 
+    # Optional warm-starts
+    if x0 is not None:
+        x0 = C.DM(x0).reshape((-1, 1))
+    if lam_x0 is not None:
+        lam_x0 = C.DM(lam_x0).reshape((-1, 1))
+    if lam_a0 is not None:
+        lam_a0 = C.DM(lam_a0).reshape((-1, 1))
+
     # Structure (sparsity only) for low-level QP interface
     qp_struct = {
         "h": H.sparsity(),
@@ -30,7 +41,7 @@ def qpsolve(
 
     opts = {
         "terminationTolerance": float(termination_tol),
-        "verbose":False,
+        "verbose": False,
         "print_time": False,
         "printLevel": "none" if not verbose else "medium",
     }
@@ -38,8 +49,8 @@ def qpsolve(
     # Use the *conic* interface with the qpoases plugin
     solver = C.conic("solver", "qpoases", qp_struct, opts)
 
-    # Call the solver with numeric data
-    sol = solver(
+    # Build input dict for the solver
+    inputs = dict(
         h=H,
         g=g,
         a=A,
@@ -48,6 +59,17 @@ def qpsolve(
         lba=lba,
         uba=uba,
     )
+
+    # Attach warm-start inputs if provided
+    if x0 is not None:
+        inputs["x0"] = x0
+    if lam_x0 is not None:
+        inputs["lam_x0"] = lam_x0
+    if lam_a0 is not None:
+        inputs["lam_a0"] = lam_a0
+
+    # Call the solver with numeric data
+    sol = solver(**inputs)
 
     x_opt = NP.array(sol["x"]).reshape((-1,))
     return x_opt

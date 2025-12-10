@@ -587,6 +587,54 @@ class UprightMPC2qpOases:
         xtest = openLoopX(self.N, self.dt, T0sp, s0s, Btaus, y0, dy0, self.g)
         print((self.A @ xtest - l)[:2 * self.N * ny])
 
+    # def _solve_qp(self, H, g, A, lbA, ubA):
+    #     """
+    #     Wrapper around casadi_qpsolve (CasADi + qpOASES):
+    #
+    #         min 0.5 x^T H x + g^T x
+    #         s.t. lbA <= A x <= ubA
+    #              lbx <= x <= ubx    (here we use wide box bounds)
+    #     """
+    #     t0 = time.perf_counter()
+    #
+    #     # Box bounds: effectively unbounded
+    #     BIG = 1e20
+    #     lbx = -BIG * np.ones(self.nx)
+    #     ubx =  BIG * np.ones(self.nx)
+    #
+    #     # Ensure dense ndarray for CasADi
+    #     A_dense = np.asarray(A, dtype=float)
+    #     lbA = np.asarray(lbA, dtype=float).ravel()
+    #     ubA = np.asarray(ubA, dtype=float).ravel()
+    #
+    #     try:
+    #         x_opt = casadi_qpsolve(
+    #             H,
+    #             g,
+    #             lbx,
+    #             ubx,
+    #             A=A_dense,
+    #             lba=lbA,
+    #             uba=ubA,
+    #             termination_tol=self.err_tol,
+    #             verbose=False,
+    #         )
+    #     except Exception as e:
+    #         print("[UprightMPC2qpOases] qpOASES solve failed:", repr(e))
+    #
+    #         # Fallback if qpOASES fails (keep controller alive)
+    #         if self.prevsol is not None:
+    #             x_opt = self.prevsol.copy()
+    #         else:
+    #             x_opt = np.zeros(self.nx)
+    #
+    #     t1 = time.perf_counter()
+    #     elapsed_ms = (t1 - t0) * 1e3
+    #     self.solve_times.append(elapsed_ms)
+    #     self.solve_iters.append(np.nan)  # qpOASES iteration count not available here
+    #
+    #     return x_opt
+
     def _solve_qp(self, H, g, A, lbA, ubA):
         """
         Wrapper around casadi_qpsolve (CasADi + qpOASES):
@@ -607,6 +655,9 @@ class UprightMPC2qpOases:
         lbA = np.asarray(lbA, dtype=float).ravel()
         ubA = np.asarray(ubA, dtype=float).ravel()
 
+        # Primal warm-start from previous solution, if available
+        x0 = self.prevsol if self.prevsol is not None else None
+
         try:
             x_opt = casadi_qpsolve(
                 H,
@@ -618,6 +669,7 @@ class UprightMPC2qpOases:
                 uba=ubA,
                 termination_tol=self.err_tol,
                 verbose=False,
+                x0=x0,          # <-- warm-start into CasADi/qpoases
             )
         except Exception as e:
             print("[UprightMPC2qpOases] qpOASES solve failed:", repr(e))
@@ -634,7 +686,6 @@ class UprightMPC2qpOases:
         self.solve_iters.append(np.nan)  # qpOASES iteration count not available here
 
         return x_opt
-
     def update1(self, T0sp, s0s, Btaus, y0, dy0, ydes, dydes):
         # 1) update constraint matrix and bounds
         self.A, self.l, self.u, self.Axidx = updateConstraint(

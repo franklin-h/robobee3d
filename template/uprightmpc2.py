@@ -581,7 +581,7 @@ def run_sweep_and_save_non_osqp(DATA_FILE):
 #     DATA_FILE_QPOAS = "qpoases_sweep_results.npz"
 #     if not os.path.exists(DATA_FILE_QPOAS):
 #         run_sweep_and_save_non_osqp(DATA_FILE_QPOAS)
-
+#
 
     # Option B: force recompute
     # run_sweep_and_save()
@@ -672,9 +672,10 @@ def run_sweep_and_save_non_osqp(DATA_FILE):
 #
 #     plt.show()
 
-#
+
 if __name__ == "__main__":
-    up, upc = createMPC(solver="OSQP",eps_abs=1e-4)
+    tol = 10**(-3.5)
+    up, upc = createMPC(solver="OSQP",eps_rel = tol, eps_abs = tol)
 
     # Hover
     start = time.time()
@@ -692,92 +693,93 @@ if __name__ == "__main__":
         trajAmp=100,  # radius of helix in mm
         trajFreq=1,  # 1 Hz lateral motion
         hlInterval=5,
-        tpert = 3000, #
+        tpert = 2000, #
         showPlots = True
     )
     viewControlTestLog(log,vscale=75,label_fontsize=20,tick_fontsize=15,desTraj=True)
-
-    # show z trajectory
-    plt.figure()
-    plt.plot(1e-3 * log['t'], log['y'][:, 2], label='z (actual)')  # [mm]
-
-    # optional: desired x trajectory
-    plt.plot(1e-3 * log['t'], log['pdes'][:, 2], 'k--', alpha=0.5, label='z (desired)')
-    label_fontsize = 20  # axis labels
-    tick_fontsize = 18  # tick labels
-
-    plt.xlabel('t [s]',fontsize=label_fontsize)
-    plt.ylabel('z [mm]',fontsize=label_fontsize)
-    plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
-    plt.grid(True)
-    plt.legend(fontsize=0.75*tick_fontsize)
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure()
-    plt.plot(1e-3 * log['t'], log['y'][:, 0], label='x (actual)')  # [mm]
-
-    # optional: desired x trajectory
-    plt.plot(1e-3 * log['t'], log['pdes'][:, 0], 'k--', alpha=0.5, label='x (desired)')
-    label_fontsize = 20  # axis labels
-    tick_fontsize = 18  # tick labels
-
-    plt.xlabel('t [s]',fontsize=label_fontsize)
-    plt.ylabel('x [mm]',fontsize=label_fontsize)
-    plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
-    plt.grid(True)
-    plt.legend(fontsize=0.75*tick_fontsize)
-    plt.tight_layout()
-    plt.show()
 #
-    # # flip task
-    # log = controlTest(
-    #     up,
-    #     tend=1000,
-    #     useMPC=True,
-    #     flipTask=True,
-    #     showPlots=False   # or False if you’ll use viewControlTestLog yourself
-    # )
-    # viewControlTestLog(log,vscale=25,desTraj=True)
-
-#     # perch task
+#     # show z trajectory
+#     plt.figure()
+#     plt.plot(1e-3 * log['t'], log['y'][:, 2], label='z (actual)')  # [mm]
+#
+#     # optional: desired x trajectory
+#     plt.plot(1e-3 * log['t'], log['pdes'][:, 2], 'k--', alpha=0.5, label='z (desired)')
+#     label_fontsize = 20  # axis labels
+#     tick_fontsize = 18  # tick labels
+#
+#     plt.xlabel('t [s]',fontsize=label_fontsize)
+#     plt.ylabel('z [mm]',fontsize=label_fontsize)
+#     plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+#     plt.grid(True)
+#     plt.legend(fontsize=0.75*tick_fontsize)
+#     plt.tight_layout()
+#     plt.show()
+#
+#     plt.figure()
+#     plt.plot(1e-3 * log['t'], log['y'][:, 0], label='x (actual)')  # [mm]
+#
+#     # optional: desired x trajectory
+#     plt.plot(1e-3 * log['t'], log['pdes'][:, 0], 'k--', alpha=0.5, label='x (desired)')
+#     label_fontsize = 20  # axis labels
+#     tick_fontsize = 18  # tick labels
+#
+#     plt.xlabel('t [s]',fontsize=label_fontsize)
+#     plt.ylabel('x [mm]',fontsize=label_fontsize)
+#     plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+#     plt.grid(True)
+#     plt.legend(fontsize=0.75*tick_fontsize,loc='upper left')
+#     plt.ylim(-110,170)
+#     plt.tight_layout()
+#     plt.show()
+# #
+#     # # flip task
 #     # log = controlTest(
 #     #     up,
 #     #     tend=1000,
 #     #     useMPC=True,
-#     #     perchTraj=True,
-#     #     showPlots=False,
+#     #     flipTask=True,
+#     #     showPlots=False   # or False if you’ll use viewControlTestLog yourself
 #     # )
 #     # viewControlTestLog(log,vscale=25,desTraj=True)
 #
-#     end = time.time()
-#     print("Total sim time (s):", end - start)
+# #     # perch task
+# #     # log = controlTest(
+# #     #     up,
+# #     #     tend=1000,
+# #     #     useMPC=True,
+# #     #     perchTraj=True,
+# #     #     showPlots=False,
+# #     # )
+# #     # viewControlTestLog(log,vscale=25,desTraj=True)
+# #
+# #     end = time.time()
+# #     print("Total sim time (s):", end - start)
+# #
+# #     # ---- Plot OSQP timing per MPC call ----
+#     if hasattr(up, "solve_times") and len(up.solve_times) > 0:
+#         # Font / figure size parameters
+#         num_solves = len(up.solve_times)
 #
-#     # ---- Plot OSQP timing per MPC call ----
-    if hasattr(up, "solve_times") and len(up.solve_times) > 0:
-        # Font / figure size parameters
-        num_solves = len(up.solve_times)
-
-        t_mpc_ms = np.linspace(0,simEndTime,num_solves,endpoint=False)
-        label_fontsize = 18  # axis labels
-        tick_fontsize = 16  # tick labels
-        title_fontsize = 16  # title
-        fig_size = (6, 4)  # inches (width, height)
-
-        plt.figure(figsize=fig_size)
-        plt.plot(t_mpc_ms/1000,up.solve_times, marker='o', linestyle='-')
-
-        plt.xlabel("Simulation time [s]", fontsize=label_fontsize)
-        plt.ylabel("OSQP solve time [ms]", fontsize=label_fontsize)
-        # plt.title("OSQP solve time per MPC call", fontsize=title_fontsize)
-
-        # Set tick label size for both axes
-        plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
-
-        plt.grid(True)
-        plt.tight_layout()
-        # plt.ylim(0, 0.1)
-        plt.show()
+#         t_mpc_ms = np.linspace(0,simEndTime,num_solves,endpoint=False)
+#         label_fontsize = 18  # axis labels
+#         tick_fontsize = 16  # tick labels
+#         title_fontsize = 16  # title
+#         fig_size = (6, 4)  # inches (width, height)
+#
+#         plt.figure(figsize=fig_size)
+#         plt.plot(t_mpc_ms/1000,up.solve_times, marker='o', linestyle='-')
+#
+#         plt.xlabel("Simulation time [s]", fontsize=label_fontsize)
+#         plt.ylabel("OSQP solve time [ms]", fontsize=label_fontsize)
+#         # plt.title("OSQP solve time per MPC call", fontsize=title_fontsize)
+#
+#         # Set tick label size for both axes
+#         plt.tick_params(axis='both', which='major', labelsize=tick_fontsize)
+#
+#         plt.grid(True)
+#         plt.tight_layout()
+#         # plt.ylim(0, 0.1)
+#         plt.show()
 
 
 
