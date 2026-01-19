@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#include <uprightmpc2.h>
+#include <uprightmpc2.h> // Declares functions
 #include <ematmult.hpp>
 #include <main.h>
 #include <stdio.h>
