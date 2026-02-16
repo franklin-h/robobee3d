@@ -4,7 +4,11 @@ cmake_minimum_required(VERSION 3.5.0)
 set(TOOLCHAIN_PREFIX arm-none-eabi-)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../arm-gcc-toolchain.cmake)
 
+<<<<<<< Updated upstream
 project(g4bee)
+=======
+project(l07bee)
+>>>>>>> Stashed changes
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 17)

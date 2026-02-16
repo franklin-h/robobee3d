@@ -391,6 +391,7 @@ if __name__ == "__main__":
     # Hover
     start = time.time()
     # controlTest(upc, 500, useMPC=True, hlInterval=5)
+<<<<<<< Updated upstream
     controlTest(
         upc,
         tend=10000,  # longer sim so you see the helix
@@ -399,6 +400,34 @@ if __name__ == "__main__":
         trajFreq=1,  # 1 Hz lateral motion
         hlInterval=5
     )
+=======
+
+    # Some interesting things you might want to plot
+    # - Desired trajectory as a dotted line. When viewControlTestLog, set desTraj to true.
+
+    ## helix task
+    log = controlTest(
+        up,
+        tend=4000,  # longer sim so you see the helix
+        useMPC=True,
+        trajAmp=100,  # radius of helix in mm
+        trajFreq=1,  # 1 Hz lateral motion
+        hlInterval=5,
+        tpert = 2000, #
+        showPlots = False
+    )
+    # viewControlTestLog(log,vscale=75,desTraj=True)
+
+
+    # flip task
+    # log = controlTest(
+    #     up,
+    #     tend=1000,
+    #     useMPC=True,
+    #     showPlots=False   # or False if you’ll use viewControlTestLog yourself
+    # )
+    viewControlTestLog(log,vscale=25,desTraj=True)
+>>>>>>> Stashed changes
 
     end = time.time()
     print(end - start)
