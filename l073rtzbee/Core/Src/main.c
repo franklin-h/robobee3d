@@ -277,15 +277,15 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void setup(void)
-{
-  /* Add your setup code here - runs once at startup */
-}
+// void setup(void)
+// {
+//   /* Add your setup code here - runs once at startup */
+// }
 
-void loop(void)
-{
-  /* Add your main loop code here - runs repeatedly */
-}
+// void loop(void)
+// {
+//   /* Add your main loop code here - runs repeatedly */
+// }
 
 /* USER CODE END 4 */
 

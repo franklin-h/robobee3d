@@ -3,4 +3,4 @@
 ../Core/Src/main.c:168:13:MX_TIM6_Init	16	static
 ../Core/Src/main.c:210:13:MX_USART2_UART_Init	8	static
 ../Core/Src/main.c:245:13:MX_GPIO_Init	48	static
-../Core/Src/main.c:286:6:Error_Handler	8	static,ignoring_inline_asm
+../Core/Src/main.c:296:6:Error_Handler	8	static,ignoring_inline_asm
