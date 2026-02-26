@@ -50,6 +50,15 @@ set(STM32_Drivers_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_uart_ex.c
 )
 
+# NOTE: this CMakeLists is included as a subdirectory by the
+# top‑level project.  The executable target is created at the
+# project root, so we do not duplicate it here.
+# (The following lines were removed to avoid recursion and target
+# re‑definition.)
+#
+# add_executable(${CMAKE_PROJECT_NAME})
+# add_subdirectory(cmake/stm32cubemx)
+
 # Drivers Midllewares
 
 

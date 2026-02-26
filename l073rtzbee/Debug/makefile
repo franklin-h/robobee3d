@@ -3,10 +3,6 @@
 # Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
-
-LOC := /Applications/STM32CubeIDE.app/Contents/Eclipse/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.macos64_1.0.100.202509120712/tools/bin/
-CC := /Applications/STM32CubeIDE.app/Contents/Eclipse/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.macos64_1.0.100.202509120712/tools/bin/arm-none-eabi-gcc
-
 -include ../makefile.init
 
 RM := rm -rf
@@ -65,17 +61,17 @@ main-build: l073rtzbee.elf secondary-outputs
 
 # Tool invocations
 l073rtzbee.elf l073rtzbee.map: $(OBJS) $(USER_OBJS) /Users/franklinho/Documents/Work,\ Research,\ Finance/RoboBee\ Research/robobee3d/l073rtzbee/STM32L073RZTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	$(LOC)/arm-none-eabi-gcc -o "l073rtzbee.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/STM32L073RZTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="l073rtzbee.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "l073rtzbee.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/STM32L073RZTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="l073rtzbee.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	$(LOC)/arm-none-eabi-size  $(EXECUTABLES)
+	arm-none-eabi-size  $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
 l073rtzbee.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	$(LOC)/arm-none-eabi-objdump -h -S $(EXECUTABLES) > "l073rtzbee.list"
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "l073rtzbee.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
