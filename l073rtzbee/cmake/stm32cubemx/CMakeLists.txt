@@ -1,3 +1,4 @@
+#cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug 
 cmake_minimum_required(VERSION 3.22)
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
@@ -7,6 +8,41 @@ set(MX_Defines_Syms
 	STM32L073xx
     $<$<CONFIG:Debug>:DEBUG>
 )
+
+project(l073rtzbee) 
+
+set(CMAKE_C_STANDARD 99) 
+set(CMAKE_CXX_STANDARD 17)
+
+# UprightMPC2 controller setup 
+set(MPC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../template/uprightmpc2)
+
+# emosqp options
+set(EMBEDDED 2)
+set(PRINTING OFF CACHE BOOL "")
+set(PROFILING OFF CACHE BOOL "")
+set(DFLOAT ON CACHE BOOL "")
+set(DLONG OFF CACHE BOOL "")
+set(QDLDL_FLOAT_TYPE "float")
+set(QDLDL_INT_TYPE "int")
+set(QDLDL_BOOL_TYPE "int")
+set(SRC_MPC_EIG ${MPC_DIR}/py/ematmult.cpp)
+
+
+# grab the .c files (GLOB is convenient but
+# not strictly necessary – see note below)
+file(GLOB SRC_MPC ${MPC_DIR}/*.c)
+
+# pull in whatever other include folders are needed
+include_directories(${MPC_DIR} ${MPC_DIR}/py ${EIGEN_DIR})
+
+# build a static library from them
+add_library(uprightmpc2 STATIC ${SRC_MPC} ${SRC_MPC_EIG})
+
+# …later…
+# add_executable(g4bee.elf …)
+# target_link_libraries(g4bee.elf uprightmpc2)
+
 
 # STM32CubeMX generated include paths
 set(MX_Include_Dirs
@@ -100,3 +136,8 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES ADDITIONAL_CLEAN_FILES ${
 if((CMAKE_C_STANDARD EQUAL 90) OR (CMAKE_C_STANDARD EQUAL 99))
     message(ERROR "Generated code requires C11 or higher")
 endif()
+
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/../gcc-arm-none-eabi.cmake")   # or set CMAKE_C_FLAGS directly
+
+

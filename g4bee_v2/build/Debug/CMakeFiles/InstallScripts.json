@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/g4bee_v2/build/Debug/cmake_install.cmake",
+		"/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/g4bee_v2/build/Debug/cmake/stm32cubemx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

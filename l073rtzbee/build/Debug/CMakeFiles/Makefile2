@@ -85,10 +85,12 @@ clean: cmake/stm32cubemx/clean
 # Directory level rules for directory cmake/stm32cubemx
 
 # Recursive "all" directory target.
+cmake/stm32cubemx/all: cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/all
 cmake/stm32cubemx/all: cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/all
 .PHONY : cmake/stm32cubemx/all
 
 # Recursive "codegen" directory target.
+cmake/stm32cubemx/codegen: cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/codegen
 cmake/stm32cubemx/codegen: cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/codegen
 .PHONY : cmake/stm32cubemx/codegen
 
@@ -97,6 +99,7 @@ cmake/stm32cubemx/preinstall:
 .PHONY : cmake/stm32cubemx/preinstall
 
 # Recursive "clean" directory target.
+cmake/stm32cubemx/clean: cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/clean
 cmake/stm32cubemx/clean: cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/clean
 .PHONY : cmake/stm32cubemx/clean
 
@@ -131,6 +134,38 @@ CMakeFiles/l073rtzbee.dir/codegen:
 CMakeFiles/l073rtzbee.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/l073rtzbee.dir/build.make CMakeFiles/l073rtzbee.dir/clean
 .PHONY : CMakeFiles/l073rtzbee.dir/clean
+
+#=============================================================================
+# Target rules for target cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir
+
+# All Build rule for target.
+cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/all:
+	$(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/depend
+	$(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug/CMakeFiles" --progress-num=29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44 "Built target uprightmpc2"
+.PHONY : cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/all
+
+# Build rule for subdir invocation for target.
+cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug/CMakeFiles" 16
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug/CMakeFiles" 0
+.PHONY : cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule
+
+# Convenience name for target.
+uprightmpc2: cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule
+.PHONY : uprightmpc2
+
+# codegen rule for target.
+cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug/CMakeFiles" --progress-num=29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44 "Finished codegen for target uprightmpc2"
+.PHONY : cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/codegen
+
+# clean rule for target.
+cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/clean:
+	$(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/clean
+.PHONY : cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/clean
 
 #=============================================================================
 # Target rules for target cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir

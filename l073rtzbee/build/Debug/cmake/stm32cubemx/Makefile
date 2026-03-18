@@ -117,6 +117,20 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule
+.PHONY : cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule
+
+# Convenience name for target.
+uprightmpc2: cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/rule
+.PHONY : uprightmpc2
+
+# fast build rule for target.
+uprightmpc2/fast:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build
+.PHONY : uprightmpc2/fast
+
+# Convenience name for target.
 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/rule:
 	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/rule
 .PHONY : cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/rule
@@ -129,6 +143,366 @@ STM32_Drivers: cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/rule
 STM32_Drivers/fast:
 	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/build.make cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/build
 .PHONY : STM32_Drivers/fast
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.cpp.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.c.s
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.o: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.o
+
+# target to build an object file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.o:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.o
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.o
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.i: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.i
+
+# target to preprocess a source file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.i:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.i
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.i
+
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.s: Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.s
+
+# target to generate assembly for a file
+Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.s:
+	cd "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/build/Debug" && $(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.s
+.PHONY : Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.c.s
 
 __/__/Core/Src/system_stm32l0xx.o: __/__/Core/Src/system_stm32l0xx.c.o
 .PHONY : __/__/Core/Src/system_stm32l0xx.o
@@ -595,6 +969,52 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... STM32_Drivers"
+	@echo "... uprightmpc2"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/auxil.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/error.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/funapprox.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/kkt.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/lin_alg.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/osqp.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/proj.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/py/ematmult.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/qdldl_interface.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/scaling.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/uprightmpc2_withWLQP.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/util.s"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.o"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.i"
+	@echo "... Users/franklinho/Documents/Work,_Research,_Finance/RoboBee_Research/robobee3d/template/uprightmpc2/workspace.s"
 	@echo "... __/__/Core/Src/system_stm32l0xx.o"
 	@echo "... __/__/Core/Src/system_stm32l0xx.i"
 	@echo "... __/__/Core/Src/system_stm32l0xx.s"

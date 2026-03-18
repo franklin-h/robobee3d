@@ -130,6 +130,19 @@ l073rtzbee/fast:
 .PHONY : l073rtzbee/fast
 
 #=============================================================================
+# Target rules for targets named uprightmpc2
+
+# Build rule for target.
+uprightmpc2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 uprightmpc2
+.PHONY : uprightmpc2
+
+# fast build rule for target.
+uprightmpc2/fast:
+	$(MAKE) $(MAKESILENT) -f cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build.make cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/build
+.PHONY : uprightmpc2/fast
+
+#=============================================================================
 # Target rules for targets named STM32_Drivers
 
 # Build rule for target.
@@ -328,6 +341,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... STM32_Drivers"
 	@echo "... l073rtzbee"
+	@echo "... uprightmpc2"
 	@echo "... Core/Src/_stdlib.o"
 	@echo "... Core/Src/_stdlib.i"
 	@echo "... Core/Src/_stdlib.s"

@@ -12,6 +12,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/4.2.0/CMakeCCompiler.cmake"
   "CMakeFiles/4.2.0/CMakeCXXCompiler.cmake"
   "CMakeFiles/4.2.0/CMakeSystem.cmake"
+  "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/cmake/gcc-arm-none-eabi.cmake"
   "/Users/franklinho/Documents/Work, Research, Finance/RoboBee Research/robobee3d/l073rtzbee/cmake/stm32cubemx/CMakeLists.txt"
   "/opt/homebrew/share/cmake/Modules/CMakeASMCompiler.cmake.in"
   "/opt/homebrew/share/cmake/Modules/CMakeASMInformation.cmake"
@@ -162,5 +163,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/l073rtzbee.dir/DependInfo.cmake"
+  "cmake/stm32cubemx/CMakeFiles/uprightmpc2.dir/DependInfo.cmake"
   "cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/DependInfo.cmake"
   )
